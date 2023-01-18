@@ -30,24 +30,6 @@
       </div>
     </div>
     {% endblock content %}
-    <!-- Footer -->
-    <footer class="page-footer font-small blue">
-
-      <!-- Copyright -->
-      <div class="footer-copyright text-center py-3 text-muted">© {% now "Y" %} {{ organization.name }}<br>
-        <small>{% trans "Powered by" %}
-          <a href="{{ settings.APP_WEBSITE}}" target="_blank">{{ settings.APP_NAME }}</a></small>
-      </div>
-      <!-- Copyright -->
-
-    </footer>
-    <!-- Footer -->
-    {% comment '' %}
-    <footer class="footer">
-      <section class="container">
-      </section>
-    </footer>
-    {% endcomment %}
   </div>
   {% render_bundle 'app' 'js' %}
   {% block javascript %}

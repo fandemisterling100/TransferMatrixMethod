@@ -1,0 +1,32 @@
+.main-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 5%;
+
+  .welcome-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;
+
+    img {
+      height: 100px;
+      margin-left: 2rem;
+    }
+  }
+  .introduction {
+    display: flex;
+    align-items: center;
+    border: 1px solid;
+    border-radius: 15px;
+    padding: 2rem;
+  }
+  img {
+    height: 70px;
+    margin-left: 2rem;
+  }
+}
+
