@@ -1,0 +1,74 @@
+{% load static i18n %}
+    <div class="card card-custom card-stretch gutter-b">
+      <!--begin::Header-->
+      <div class="card-header border-0 py-5">
+        <h3 class="card-title align-items-start flex-column">
+          <span class="card-label font-weight-bolder text-dark">{% trans "Outstanding Customers" %}</span>
+          <span class="text-muted mt-3 font-weight-bold font-size-sm">{% blocktrans with count=customers_count%}{{ count }} outstanding customers{% endblocktrans %}</span>
+        </h3>
+        <div class="card-toolbar">
+          <a href="{% url 'organizations:customers:create' %}" class="btn btn-info font-weight-bolder font-size-sm mr-3">{% trans "New Customer" %}</a>
+        </div>
+      </div>
+      <!--end::Header-->
+      <!--begin::Body-->
+      <div class="card-body pt-0 pb-3">
+        {% if customers %}
+        <div class="tab-content">
+          <!--begin::Table-->
+          <div class="table-responsive">
+            <table class="table table-head-custom table-head-bg table-borderless table-vertical-center">
+              <thead>
+                <tr class="text-left text-uppercase">
+                  <th style="min-width: 250px" class="pl-7">
+                    <span class="text-dark-75">{% trans "name" %}</span>
+                  </th>
+                  <th style="min-width: 100px">{% trans "balance" %}</th>
+                  <th style="min-width: 100px">{% trans "paid" %}</th>
+                  <th style="min-width: 100px">{% trans "invoiced" %}</th>
+                  <th style="min-width: 130px"></th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for customer in customers|slice:":5" %}
+                <tr>
+                  <td class="pl-0 py-8">
+                    <div class="d-flex align-items-center">
+                      <div class="symbol symbol-50 symbol-light mr-4">
+                        <span class="symbol-label">
+                          <img src="" class="h-75 align-self-end"
+                            alt="" />
+                        </span>
+                      </div>
+                      <div>
+                        <a href="{% url 'organizations:customers:detail' customer.id %}" class="text-dark-75 font-weight-bolder text-hover-primary mb-1 font-size-lg">{{ customer.name }}</a>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ customer.balance }}</span>
+                  </td>
+                  <td>
+                    <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ customer.amount_paid }}</span>
+                  </td>
+                  <td>
+                    <span class="text-dark-75 font-weight-bolder d-block font-size-lg">{{ customer.amount_debt }}</span>
+                  </td>
+                  <td>
+                    <img src="" alt="image" style="width: 5.5rem" />
+                    <span class="text-muted font-weight-bold d-block font-size-sm"></span>
+                  </td>
+
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!--end::Table-->
+        </div>
+        {% else %}
+        <div>{% trans "There are not customers with outstanding balance" %}</div>
+        {% endif %}
+      </div>
+      <!--end::Body-->
+    </div>

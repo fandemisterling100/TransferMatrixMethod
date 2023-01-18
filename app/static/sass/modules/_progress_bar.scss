@@ -1,0 +1,23 @@
+.avance {
+  height: fit-content;
+  margin: 2rem 2rem;
+  width: 85%;
+}
+
+.circle {
+  min-width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-color: gray;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.active {
+  background-color: yellow;
+}
+
+.line{
+  height: 0.2rem;
+  width: 80%;
+  background-color: gray;
+}

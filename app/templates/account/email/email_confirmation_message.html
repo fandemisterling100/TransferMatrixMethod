@@ -1,0 +1,17 @@
+{% extends 'email/base_action.html' %}
+{% load static i18n account app_settings%}
+{% app_settings  as settings %}
+{% block title %}{% trans "Please confirm email" %}{% endblock title %}
+{% block app_logo %}{% app_settings  as settings %}{{settings.APP_LOGO_EMAIL }}{% endblock app_logo %}
+{% block content %}
+{% user_display user as user_display %}
+{% app_settings  as settings %}
+{% autoescape off %}
+{% blocktrans with site_name=settings.APP_NAME site_domain=current_site.domain %}<p>Hello from {{ site_name }}!</p>
+<p>You're receiving this e-mail because user {{ user_display }} has given yours as an e-mail address to connect their account.</p>
+<p>Please confirm this is correct.</p>
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock content %}
+{% block action_url %}{{ activate_url }}{% endblock action_url %}
+{% block action_text %}{% trans "Confirm Email" %}{% endblock action_text %}

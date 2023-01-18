@@ -1,0 +1,17 @@
+{% extends 'email/base_action.html' %}
+{% load static i18n account app_settings%}
+{% app_settings  as settings %}
+{% block title %}{% trans "Welcome to" %} {% app_settings  as settings %}{{ settings.APP_NAME }}{% endblock title %}
+{% block app_logo %}{% app_settings  as settings %}{% static settings.APP_LOGO_EMAIL %}{% endblock app_logo %}
+{% block content %}
+{% user_display user as user_display %}
+{% app_settings  as settings %}
+{% autoescape off %}
+{% blocktrans with site_name=settings.APP_NAME site_domain=current_site.domain %}Hello from {{ site_name }}!
+<p>You're receiving this e-mail because It was given to connect the account at {{ site_name }}.</p>
+<p>Please confirm the account to get started</p>
+{% endblocktrans %}
+{% endautoescape %}
+{% endblock content %}
+{% block action_url %}{{ activate_url }}{% endblock action_url %}
+{% block action_text %}{% trans "Confirm Account" %}{% endblock action_text %}

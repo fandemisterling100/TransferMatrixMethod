@@ -1,0 +1,45 @@
+
+{% load static i18n %}{% load render_bundle from webpack_loader %}<!DOCTYPE html>
+<html lang="en">
+	<!--begin::Head-->
+	<head>
+		<meta charset="utf-8" />
+		<title>Page Not Found</title>
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		<!--end::Fonts-->
+		<!--begin::Page Custom Styles(used by this page)-->
+		<!--end::Page Custom Styles-->
+		<!--begin::Global Theme Styles(used by all pages)-->
+        {% block css %}
+        {% render_bundle 'app' 'css' %}
+        {% endblock %}
+		<!--end::Layout Themes-->
+	</head>
+	<!--end::Head-->
+	<!--begin::Body-->
+	<body id="kt_body" class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable page-loading">
+		<!--begin::Main-->
+		<div class="d-flex flex-column flex-root">
+			<!--begin::Error-->
+			<div class="error error-3 d-flex flex-row-fluid bgi-size-cover bgi-position-center">
+				<!--begin::Content-->
+				<div class="px-10 px-md-30 py-10 py-md-0 d-flex flex-column justify-content-md-center">
+					<h1 class="error-title text-stroke text-transparent">404</h1>
+					<p class="display-4 font-weight-boldest text-white mb-12">How did you get here</p>
+					<p class="font-size-h1 font-weight-boldest text-dark-75">Sorry we can't seem to find the page you're looking for.</p>
+					<p class="font-size-h4 line-height-md">There may be a misspelling in the URL entered,or the page you are looking for may no longer exist.</p>
+				</div>
+				<!--end::Content-->
+			</div>
+			<!--end::Error-->
+		</div>
+		<!--end::Main-->
+    {% block javascript %}
+    {% render_bundle 'app' 'js' %}
+    {% endblock javascript %}
+	</body>
+	<!--end::Body-->
+</html>

@@ -1,0 +1,26 @@
+{% extends "email/base_action.html" %}
+{% load static i18n %}
+
+{% block content %}
+{% trans 'You have pending debts with' %} {{ organization.name }}. {% trans 'View the details here:' %}
+
+<tr>
+  <td align="left" style="font-size:0px;padding:0px 10px;word-break:break-word">
+    <table cellpadding="0" cellspacing="0" width="100%" border="0" style="color:#000000;font-family:Ubuntu,Helvetica,Arial,sans-serif;font-size:16px;line-height:22px;table-layout:auto;width:100%;border:none">
+      <tbody>
+        <tr style="border-bottom:1px solid #ecedee;text-align:left;padding:5px 0;margin-bottom:50px">
+          <th style="padding:0 15px"> {% trans 'Concept' %} </th>
+          <th style="padding:0 0 0 15px"> {% trans 'Amount' %} </th>
+        </tr>
+        {% for debt in debts %}
+          <tr>
+            <td style="padding:0 15px"> {{ debt.concept }}  </td>
+            <td style="padding:0 0 0 15px"> {{ debt.amount }} </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </td>
+</tr>
+{% endblock content %}
+{% block action_text %}{% trans 'View and pay' %}{% endblock action_text %}

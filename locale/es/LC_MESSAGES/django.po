@@ -1,0 +1,957 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-06 02:47+0000\n"
+"PO-Revision-Date: 2020-07-12 09:59-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.3\n"
+
+#: app/core/constants.py:4
+msgid "Only Once"
+msgstr "Una Vez"
+
+#: app/core/constants.py:5
+msgid "Every Month"
+msgstr "Cada mes"
+
+#: app/core/constants.py:6
+msgid "Every 3 Months"
+msgstr "Cada 3 meses"
+
+#: app/core/constants.py:7
+msgid "Every 6 Months"
+msgstr "Cada 6 meses"
+
+#: app/core/constants.py:8
+msgid "Every 9 Months"
+msgstr "Cada 9 meses"
+
+#: app/core/constants.py:9
+msgid "Every 12 Months"
+msgstr "Cada 12 Meses"
+
+#: app/core/constants.py:10
+msgid "Every 24 Months"
+msgstr "Cad 24 Meses"
+
+#: app/core/constants.py:20
+msgid "TI"
+msgstr ""
+
+#: app/core/constants.py:21
+msgid "CC"
+msgstr ""
+
+#: app/core/constants.py:22
+msgid "TE"
+msgstr ""
+
+#: app/core/constants.py:23
+msgid "NIT"
+msgstr ""
+
+#: app/core/constants.py:24
+msgid "PASSPORT"
+msgstr "PASAPORTE"
+
+#: app/core/constants.py:25
+msgid "FINAL CONSUMER"
+msgstr "CONSUMIDOR FINAL"
+
+#: app/core/constants.py:26
+msgid "CIVIL _REGISTRATION"
+msgstr "REGISTRO CIVIL"
+
+#: app/core/constants.py:27
+msgid "ANOTHER"
+msgstr "OTRO"
+
+#: app/core/constants.py:28
+msgid "UNDEFINED"
+msgstr "INDEFINIDO"
+
+#: app/core/constants.py:32
+msgid "Active"
+msgstr "Activo"
+
+#: app/core/constants.py:33
+msgid "Inactive"
+msgstr "Inactivo"
+
+#: app/core/constants.py:34
+msgid "To be deactivated"
+msgstr "A ser desactivado"
+
+#: app/core/constants.py:38
+msgid "Unique Charge"
+msgstr "Cargo único"
+
+#: app/core/constants.py:39
+msgid "Recurring Charge"
+msgstr "Cargo recurrente"
+
+#: app/core/constants.py:40
+msgid "Multiple Quotas"
+msgstr "Cuotas Múltiples"
+
+#: app/core/constants.py:43
+msgid "User"
+msgstr "Usuario"
+
+#: app/core/constants.py:44
+msgid "Administrator"
+msgstr "Administrador"
+
+#: app/core/constants.py:45
+msgid "Owner"
+msgstr "Propietario"
+
+#: app/core/constants.py:49 app/core/constants.py:65
+msgid "Pending"
+msgstr "Pendiente"
+
+#: app/core/constants.py:50
+msgid "Sent"
+msgstr "Enviado"
+
+#: app/core/constants.py:51
+msgid "Paid"
+msgstr "Pagado"
+
+#: app/core/constants.py:52
+msgid "Expired"
+msgstr "Expirado"
+
+#: app/core/constants.py:53
+msgid "Voided"
+msgstr "Anulado"
+
+#: app/core/constants.py:57
+msgid "Cash"
+msgstr "Efectivo"
+
+#: app/core/constants.py:58 app/templates/public/payment_methods.html:12
+msgid "Bank Transfer"
+msgstr "Transferencia bancaria"
+
+#: app/core/constants.py:59
+msgid "Payu"
+msgstr ""
+
+#: app/core/constants.py:60
+msgid "ePayco"
+msgstr ""
+
+#: app/core/constants.py:61
+msgid "Stripe"
+msgstr ""
+
+#: app/core/constants.py:66
+msgid "Approved"
+msgstr "Aprobado"
+
+#: app/core/constants.py:67
+msgid "Failed"
+msgstr "Fallado"
+
+#: app/core/constants.py:71 app/templates/pages/customers_new.html:56
+#: app/templates/pages/settings.html:175
+msgid "Email"
+msgstr "Correo Electrónico"
+
+#: app/core/constants.py:72
+msgid "SMS"
+msgstr ""
+
+#: app/core/constants.py:78 app/templates/public/customer_statement.html:33
+#: app/templates/public/invoice_detail.html:42
+msgid "Start Date"
+msgstr "Fecha de Inicio"
+
+#: app/core/constants.py:79 app/templates/public/customer_statement.html:35
+#: app/templates/public/invoice_detail.html:44
+msgid "Expiration Date"
+msgstr "Fecha de Expiración"
+
+#: app/core/constants.py:83
+msgid "savings"
+msgstr "ahorros"
+
+#: app/core/constants.py:84
+msgid "checking"
+msgstr "corriente"
+
+#: app/core/messages.py:4
+msgid "email sent"
+msgstr "email enviado"
+
+#: app/core/messages.py:5
+msgid "SMS sent"
+msgstr "Mensaje de texto enviado"
+
+#: app/core/messages.py:6
+msgid "customer created"
+msgstr "cliente creado"
+
+#: app/core/messages.py:7
+msgid "to"
+msgstr "a"
+
+#: app/core/messages.py:8
+msgid "added payment"
+msgstr "pago efectuado"
+
+#: app/core/messages.py:9
+msgid "created debt"
+msgstr "deuda creada"
+
+#: app/core/messages.py:10
+msgid "updated debt"
+msgstr "deuda actualizada"
+
+#: app/templates/account/account_inactive.html:5
+#: app/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr "Cuenta Inactiva"
+
+#: app/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr "Esta cuenta está inactiva."
+
+#: app/templates/account/email.html:7
+msgid "Account"
+msgstr "Cuenta"
+
+#: app/templates/account/email.html:11
+msgid "E-mail Addresses"
+msgstr "Direcciones de Correo"
+
+#: app/templates/account/email.html:14
+msgid "The following e-mail addresses are associated with your account:"
+msgstr "LAs siguientes direcciones de corre están asociadas con tu cuenta:"
+
+#: app/templates/account/email.html:28
+msgid "Verified"
+msgstr "Verificado"
+
+#: app/templates/account/email.html:30
+msgid "Unverified"
+msgstr "Sin Verificar"
+
+#: app/templates/account/email.html:32
+msgid "Primary"
+msgstr "Primario"
+
+#: app/templates/account/email.html:38
+msgid "Make Primary"
+msgstr "Hacer Primario"
+
+#: app/templates/account/email.html:39
+msgid "Re-send Verification"
+msgstr "Re-enviar verificación"
+
+#: app/templates/account/email.html:40
+#: app/templates/socialaccount/connections.html:35
+msgid "Remove"
+msgstr "Eliminar"
+
+#: app/templates/account/email.html:47
+msgid "Warning:"
+msgstr "Alerta:"
+
+#: app/templates/account/email.html:47
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+"No tienes ningún email configurado. Deberías añadir un correo para poder "
+"recibir notificaciones, reiniciar la contraseña, etc."
+
+#: app/templates/account/email.html:52
+msgid "Add E-mail Address"
+msgstr "Añadir Email"
+
+#: app/templates/account/email.html:57
+msgid "Add E-mail"
+msgstr "Añadir Email"
+
+#: app/templates/account/email.html:67
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr "¿Realmente quieres borrar los emails seleccionados?"
+
+
+#: app/templates/account/email/email_confirmation_message.html:4
+msgid "Please confirm email"
+msgstr "Por favor confirmar correo electrónico"
+
+#: app/templates/account/email/email_confirmation_message.html:10
+#, python-format
+msgid ""
+"<p>Hello from %(site_name)s!</p>\n"
+"<p>You're receiving this e-mail because user %(user_display)s has given "
+"yours as an e-mail address to connect their account.</p>\n"
+"<p>Please confirm this is correct.</p>\n"
+msgstr ""
+"<p>Hola desde %(site_name)s!</p>\n"
+"<p>Estás recibiendo este correo porque %(user_display)s ha dadp este correo "
+"para conectar su cuenta.</p>\n"
+"<p>Por favor confirme que esto sea correcto.</p>\n"
+
+#  #: app/templates/account/email.html:62
+#  msgid "Add E-mail Address"
+#  msgstr "Agregar una dirección de correo electrónico"
+#  #: app/templates/account/email.html:68
+#  msgid "Add E-mail"
+#  msgstr "Agregar un correo electrónico"
+#: app/templates/account/email/email_confirmation_message.html:17
+msgid "Confirm Email"
+msgstr "Confirmar correo electrónico"
+
+#: app/templates/account/email/email_confirmation_signup_message.html:4
+#: app/templates/base_login.html:45
+msgid "Welcome to"
+msgstr "Bienvenido a"
+
+#: app/templates/account/email/email_confirmation_signup_message.html:10
+#, python-format
+msgid ""
+"Hello from %(site_name)s!\n"
+"<p>You're receiving this e-mail because It was given to connect the account "
+"at %(site_name)s.</p>\n"
+"<p>Please confirm the account to get started</p>\n"
+msgstr ""
+"Hola desde %(site_name)s!\n"
+"<p>Estás recibiendo este correo porque fue dado para conectar la cuenta en "
+"%(site_name)s.</p>\n"
+"<p>Por favor confirme la cuenta para empezar a hacer uso de ella</p>\n"
+
+#: app/templates/account/email/email_confirmation_signup_message.html:17
+msgid "Confirm Account"
+msgstr "Confirmar Cuenta"
+
+#: app/templates/account/email/password_reset_key_message.html:4
+#: app/templates/account/email/password_reset_key_message.html:16
+msgid "Reset Password"
+msgstr "Reiniciar Contraseña"
+
+#: app/templates/account/email/password_reset_key_message.html:10
+#, python-format
+msgid ""
+"<p>Hello from %(site_name)s!</p>\n"
+"<p>You're receiving this e-mail because you or someone else has requested a "
+"password for your user account.</p>\n"
+"<p>It can be safely ignored if you did not request a password reset. Click "
+"\"Reset Password\" button to reset your password.</p>"
+msgstr ""
+"<p>Hola desde %(site_name)s!</p>\n"
+"<p>Estas recibiendo este correo porque tú o alguien más ha solicitado un "
+"restablecimiento de la contraseñas para tu cuenta.</p>\n"
+"<p>Puede ser ignorado si no hiciste esta solicitud. Haga click en el botón "
+"de \"Restablecer Contraseña\" para crear una nueva contraseña.</p>"
+
+#  #: app/templates/account/email.html:62
+#  msgid "Add E-mail Address"
+#  msgstr "Agregar una dirección de correo electrónico"
+#  #: app/templates/account/email.html:68
+#  msgid "Add E-mail"
+#  msgstr "Agregar un correo electrónico"
+#: app/templates/account/email_confirm.html:6
+#: app/templates/account/email_confirm.html:10
+msgid "Confirm E-mail Address"
+msgstr "Confirmar correo electrónico"
+
+#: app/templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+"Por favor confirmar que <a href=\"mailto:%(email)s\">%(email)s</a> es un "
+"correo electrónico del usuario  %(user_display)s."
+
+#: app/templates/account/email_confirm.html:20
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: app/templates/account/email_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+"Esta confirmación de correo electrónico se ha vencido o es invalida. Por "
+"favor <a href=\"%(email_url)s\">solicitar otra confirmación</a>."
+
+#: app/templates/account/login.html:7 app/templates/account/login.html:44
+msgid "Sign In"
+msgstr "Ingresar"
+
+#: app/templates/account/login.html:11
+msgid "Sign into"
+msgstr "Ingresar a"
+
+#: app/templates/account/login.html:16
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign "
+"up</a>\n"
+"for a %(site_name)s account and sign in below:"
+msgstr ""
+"Por favor inicie sesión con\n"
+"una red social. O <a href=\"%(signup_url)s\">regístrese</a> para obtener una "
+"cuenta de %(site_name)s e inicie sesión a continuación:"
+
+#: app/templates/account/login.html:26
+msgid "or"
+msgstr "ó"
+
+#: app/templates/account/login.html:33
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"<a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+"Si no has creado una cuenta aún, por favor <a href=\"%(signup_url)s"
+"\">regístrate</a> primero."
+
+#: app/templates/account/login.html:43
+msgid "Forgot Password?"
+msgstr "¿Olvidaste tu contraseña?"
+
+#: app/templates/account/logout.html:5 app/templates/account/logout.html:8
+#: app/templates/account/logout.html:17
+msgid "Sign Out"
+msgstr "Cerrar Sesión"
+
+#: app/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr "¿Estás seguro de cerrar sesión?"
+
+#: app/templates/account/password_change.html:6
+#: app/templates/account/password_change.html:9
+#: app/templates/account/password_change.html:14
+#: app/templates/account/password_reset_from_key.html:5
+#: app/templates/account/password_reset_from_key.html:8
+#: app/templates/account/password_reset_from_key_done.html:4
+#: app/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr "Cambiar Contraseña"
+
+#: app/templates/account/password_reset.html:7
+#: app/templates/account/password_reset.html:11
+#: app/templates/account/password_reset_done.html:6
+#: app/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr "Reiniciar Contraseña"
+
+#: app/templates/account/password_reset.html:16
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+"¿Olvidaste to contraseña? Ingresa tu email, y te enviaremos un email para "
+"que la generes nuevamente."
+
+#: app/templates/account/password_reset.html:21
+msgid "Reset My Password"
+msgstr "Reiniciar Mi Contraseña"
+
+#: app/templates/account/password_reset.html:24
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+"Por favor contáctenos si tienes algún problema reiniciando la contraseña."
+
+#: app/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Te hemos enviado un email. Por favor contáctenos si no lo recibes en unos "
+"minutos."
+
+#: app/templates/account/password_reset_from_key.html:8
+msgid "Bad Token"
+msgstr "Token Incorrecto"
+
+#  #: app/templates/account/password_reset.html:28
+#  msgid "Reset My Password"
+#  msgstr "Resestablecer mi contraseña"
+#  #: app/templates/account/password_reset.html:36
+#  msgid "Please contact us if you have any trouble resetting your password."
+#  msgstr ""
+#  "Por favor contáctarnos si presenta problemas  para reestablecer su "
+#  "contraseña."
+#  #: app/templates/account/password_reset_done.html:15
+#  msgid ""
+#  "We have sent you an e-mail. Please contact us if you do not receive it "
+#  "within a few minutes."
+#  msgstr ""
+#  "Te hemos enviado un correo electrónico. Por favor contáctanos si no lo "
+#  "recibes en los próximos minutos."
+#  #: app/templates/account/password_reset_from_key.html:6
+#  #: app/templates/account/password_reset_from_key.html:7
+#  msgid "Bad Token"
+#  msgstr "Código incorrecto"
+#: app/templates/account/password_reset_from_key.html:12
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+"El enlace para reestablecer la contraseña es inválido, probablemente por que "
+"ya ha sido utilizado. Por favor solicitar una nueva contraseña <a href="
+"\"%(passwd_reset_url)s\">nueva contraseña</a>."
+
+#: app/templates/account/password_reset_from_key.html:18
+msgid "change password"
+msgstr "cambiar contraseña"
+
+#: app/templates/account/password_reset_from_key.html:21
+#: app/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr "Su contraseña ha sido cambiada."
+
+#: app/templates/account/password_set.html:6
+#: app/templates/account/password_set.html:9
+#: app/templates/account/password_set.html:14
+msgid "Set Password"
+msgstr "Asignar contraseña"
+
+#: app/templates/account/signup.html:6
+#: app/templates/socialaccount/signup.html:5
+msgid "Signup"
+msgstr "Registrarse"
+
+#: app/templates/account/signup.html:9 app/templates/account/signup.html:19
+#: app/templates/socialaccount/signup.html:20
+msgid "Sign Up"
+msgstr "Registrarse"
+
+#: app/templates/account/signup.html:11
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+"¿Ya tiene una cuenta? Entonces por favor <a href=\"%(login_url)s\">inicie "
+"sesión</a>."
+
+#: app/templates/account/signup_closed.html:5
+#: app/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr "Registro cerrado"
+
+#: app/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr "Lo sentimos, pero el registro se encuentra cerrado en este momento."
+
+#: app/templates/account/verification_sent.html:5
+#: app/templates/account/verification_sent.html:8
+#: app/templates/account/verified_email_required.html:5
+#: app/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr "Verificar su cuenta de correo electrónico"
+
+#: app/templates/account/verification_sent.html:10
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+"Se ha enviado un correo electrónico a <a href=\"mailto:%(email)s\">"
+"%(email)s</a>  para la verificación. Siga el enlace enviado para finalizar "
+"el proceso de registro. Por favor contáctarnos si no recibe el correo "
+"electrónico en los próximos minutos."
+
+#: app/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+"Esta parte del sitio requiere que verifiquemos que\n"
+"usted es quien dice ser. Para esto, requerimos que usted\n"
+"verifique que es dueño del correo electrónico registrado."
+
+#: app/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+"Hemos enviado un correo electrónico para \n"
+"verificación. Por favor haga clic en el enlace adentro del correo. Por "
+"favor\n"
+"contáctarnos si usted no recibe el correo en los próximos minutos."
+
+#: app/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+"<strong>Nota:</strong> usted todavía puede <a href=\"%(email_url)s\">cambiar "
+"su correo electrónico</a>."
+
+#: app/templates/base_public.html:29
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: app/templates/base_public.html:47
+msgid "Powered by"
+msgstr ""
+
+#: app/templates/components/aside.html:50
+msgid "Dashboard"
+msgstr "Escritorio"
+
+#: app/templates/components/aside.html:57
+msgid "Customers"
+msgstr "Clientes"
+
+#: app/templates/components/aside.html:65
+#: app/templates/components/footer.html:12
+msgid "About"
+msgstr "Acerca de Nosotros"
+
+#: app/templates/components/aside.html:73
+msgid "Contact"
+msgstr "Contacto"
+
+#: app/templates/components/breadcrumb.html:4
+msgid "Home"
+msgstr "Inicio"
+
+#: app/templates/components/header.html:21
+msgid "Hi"
+msgstr "Hola"
+
+#: app/templates/components/user_panel.html:79
+msgid "My Profile"
+msgstr "Mi perfil"
+
+#: app/templates/components/user_panel.html:80
+msgid "Edit your profile information"
+msgstr "Editar la información de perfil"
+
+#: app/templates/components/user_panel.html:109
+msgid "E-Mail"
+msgstr ""
+
+#: app/templates/components/user_panel.html:110
+msgid "Update email"
+msgstr "Actualizar Email"
+
+#: app/templates/email/debts/basic_notification.html:5
+msgid "You have pending debts with"
+msgstr "Tienes deudas pendientes con"
+
+#: app/templates/email/debts/basic_notification.html:5
+msgid "View the details here:"
+msgstr "Ver los Detalles aquí"
+
+#: app/templates/email/debts/basic_notification.html:12
+msgid "Concept"
+msgstr "Concepto"
+
+#: app/templates/email/debts/basic_notification.html:13
+msgid "Amount"
+msgstr "Cantidad"
+
+#: app/templates/email/debts/basic_notification.html:26
+msgid "View and pay"
+msgstr "Ver y pagar"
+
+#: app/templates/pages/boxes/customers_table.html:6
+msgid "Outstanding Customers"
+msgstr "Clientes con deuda"
+
+#: app/templates/pages/boxes/customers_table.html:7
+#, python-format
+msgid "%(count)s outstanding customers"
+msgstr "%(count)s clientes con deuda"
+
+#: app/templates/pages/boxes/customers_table.html:10
+#: app/templates/pages/customers_new.html:3
+#: app/templates/pages/customers_new.html:4
+msgid "New Customer"
+msgstr "Nuevo Cliente"
+
+#: app/templates/pages/boxes/customers_table.html:24
+msgid "name"
+msgstr "nombre"
+
+#: app/templates/pages/boxes/customers_table.html:26
+msgid "balance"
+msgstr "balance"
+
+#: app/templates/pages/boxes/customers_table.html:27
+msgid "paid"
+msgstr "pagado"
+
+#: app/templates/pages/boxes/customers_table.html:28
+msgid "invoiced"
+msgstr "obrado"
+
+#: app/templates/pages/boxes/customers_table.html:70
+msgid "There are not customers with outstanding balance"
+msgstr "No hay clientes con cobros pendientes"
+
+#: app/templates/pages/boxes/notifications.html:7
+msgid "Activity"
+msgstr "Actividad"
+
+#: app/templates/pages/customers_edit.html:3
+#: app/templates/pages/customers_edit.html:4
+msgid "Edit Customer"
+msgstr "Editar Cliente"
+
+#: app/templates/pages/customers_edit.html:32
+#: app/templates/pages/customers_new.html:31
+msgid "Customer Details"
+msgstr "Detalles del Cliente"
+
+#: app/templates/pages/customers_new.html:9 app/templates/pages/settings.html:9
+msgid "Back"
+msgstr "Atrás"
+
+#: app/templates/pages/customers_new.html:13
+#: app/templates/pages/settings.html:13
+msgid "Save"
+msgstr "Guardar"
+
+#: app/templates/pages/customers_new.html:35
+#: app/templates/pages/settings.html:130
+msgid "Name"
+msgstr "Nombre"
+
+#: app/templates/pages/customers_new.html:42
+#: app/templates/pages/settings.html:161
+msgid "Phone"
+msgstr "Teléfono"
+
+#: app/templates/pages/settings.html:3 app/templates/pages/settings.html:4
+msgid "Organization Settings"
+msgstr "Configuración de la Empresa"
+
+#: app/templates/pages/settings.html:47
+msgid "Organization Details"
+msgstr "Detalles de la Empresa"
+
+#: app/templates/pages/settings.html:70
+msgid "Payment Methods"
+msgstr "Métodos de Pago"
+
+#: app/templates/pages/settings.html:91
+msgid "Notification Channels"
+msgstr "Canales de Notificación"
+
+#: app/templates/pages/settings.html:106
+msgid "Organization Info"
+msgstr "Información de la Empresa"
+
+#: app/templates/pages/settings.html:110
+msgid "Logo"
+msgstr "Logo"
+
+#: app/templates/pages/settings.html:119
+msgid "Cancel logo"
+msgstr "Cancelar logo"
+
+#: app/templates/pages/settings.html:122
+msgid "Remove logo"
+msgstr "Eliminar Logo"
+
+#: app/templates/pages/settings.html:126
+msgid "Allowed file types: png, jpg, jpeg."
+msgstr "Tipos de archivo permitidos: png, jpg, jpeg."
+
+#: app/templates/pages/settings.html:136
+msgid "ID Type"
+msgstr "Tipo de Identificación"
+
+#: app/templates/pages/settings.html:146
+msgid "ID Number"
+msgstr "Número de Identificación"
+
+#: app/templates/pages/settings.html:156
+msgid "Contact Info"
+msgstr "Información de Contacto"
+
+#: app/templates/pages/settings.html:189
+msgid "Address"
+msgstr "Dirección"
+
+#: app/templates/pages/settings.html:195
+msgid "Address Line 2"
+msgstr "Dirección Línea 2"
+
+#: app/templates/pages/settings.html:201
+msgid "City"
+msgstr "Ciudad"
+
+#: app/templates/pages/settings.html:207
+msgid "State"
+msgstr "Estado"
+
+#: app/templates/pages/settings.html:213
+msgid "ZIP Code"
+msgstr "Código Postal"
+
+#: app/templates/pages/settings.html:232
+msgid "Notifications for Customers"
+msgstr "Notificación para Clientes"
+
+#: app/templates/pages/settings.html:237
+msgid "Email Notifications"
+msgstr "Notificaciones por Email"
+
+#: app/templates/pages/settings.html:248
+msgid "SMS Notifications"
+msgstr "Mensajes de Texto"
+
+#: app/templates/public/customer_statement.html:8
+#, fuzzy, python-format
+#| msgid "%(customer)s"
+msgid "%(customer)s"
+msgstr "%(cliente)s"
+
+#: app/templates/public/customer_statement.html:14
+msgid "Account Statement"
+msgstr "Estado de Cuenta"
+
+#: app/templates/public/customer_statement.html:48
+#, python-format
+msgid "%(customer)s doesn't have any pending debts with %(organization)s"
+msgstr "%(customer)s no tiene deudas pendientes con %(organization)s"
+
+#: app/templates/public/invoice_detail.html:18
+#, python-format
+msgid ""
+"Invoice #%(number)s to\n"
+"    %(customer)s"
+msgstr ""
+"Cobro #%(number)s a\n"
+"    %(customer)s"
+
+#: app/templates/public/invoice_detail.html:25
+msgid "Invoice Details"
+msgstr "Detalles del Cobro"
+
+#: app/templates/public/invoice_detail.html:55
+msgid "View Account Statement"
+msgstr "Ver Estado de Cuenta"
+
+#: app/templates/public/payment_methods.html:4
+msgid "Payment Options"
+msgstr "Métodos de Pago"
+
+#: app/templates/public/payment_methods.html:17
+msgid "Bank Name"
+msgstr "Nombre del Banco"
+
+#: app/templates/public/payment_methods.html:23
+msgid "Account Type"
+msgstr "Tipo de Cuenta"
+
+#: app/templates/public/payment_methods.html:29
+msgid "Account Number"
+msgstr "Número de Cuenta"
+
+#: app/templates/socialaccount/authentication_error.html:5
+#: app/templates/socialaccount/authentication_error.html:8
+msgid "Social Network Login Failure"
+msgstr "Error en la red social"
+
+#: app/templates/socialaccount/authentication_error.html:10
+msgid ""
+"An error occurred while attempting to login via your social network account."
+msgstr "Ocurrió un error intentando de iniciar sesión con esta red social"
+
+#: app/templates/socialaccount/connections.html:5
+#: app/templates/socialaccount/connections.html:8
+msgid "Account Connections"
+msgstr "Conexiones de la cuenta"
+
+#: app/templates/socialaccount/connections.html:11
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts:"
+msgstr "Puedes iniciar sesión con alguna de las siguientes cuentas externas:"
+
+#: app/templates/socialaccount/connections.html:43
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+"Actualmente no tienes ninguna cuenta de red social asociada a esta cuenta."
+
+#: app/templates/socialaccount/connections.html:46
+msgid "Add a 3rd Party Account"
+msgstr "Agregar una cuenta de una red social externa"
+
+#: app/templates/socialaccount/login_cancelled.html:5
+#: app/templates/socialaccount/login_cancelled.html:9
+msgid "Login Cancelled"
+msgstr "Incio de sesión cancelado"
+
+#: app/templates/socialaccount/login_cancelled.html:13
+#, python-format
+msgid ""
+"You decided to cancel logging in to our site using one of your existing "
+"accounts. If this was a mistake, please proceed to <a href=\"%(login_url)s"
+"\">sign in</a>."
+msgstr ""
+"Has decidido cancelar el inicio de sesión a nuestro sitio usando una de tus "
+"cuentas. Si esto fue un error, <a href=\"%(login_url)s\">inicie sesión</a>."
+
+#: app/templates/socialaccount/signup.html:8
+msgid "Finish Registration"
+msgstr "Finalizar Registro"
+
+#: app/templates/socialaccount/signup.html:10
+#, python-format
+msgid ""
+"You are about to use your\n"
+"  %(provider_name)s account to login to\n"
+"  %(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+"Estas a punto de utilizar tu cuenta %(provider_name)s para acceder a "
+"%(site_name)s. Como paso final, por favor completa el siguiente formulario:"
+
+#: app/users/apps.py:7
+msgid "Users"
+msgstr "Usuarios"
+
+#: app/users/forms.py:16
+msgid "This username has already been taken."
+msgstr "Este nombre de usuario ya ha sido tomado"
+
+#: app/users/models.py:11
+msgid "Name of User"
+msgstr "Nombre de Usuario"
+
+#: app/users/views.py:34
+msgid "Infos successfully updated"
+msgstr "Información ha sido actualizada de manera exitosa"
+
+#: config/settings/base.py:28
+msgid "English"
+msgstr "Inglés"
+
+#: config/settings/base.py:28
+msgid "Spanish"
+msgstr "Español"
+

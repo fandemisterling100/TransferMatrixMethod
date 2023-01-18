@@ -1,0 +1,37 @@
+{% load socialaccount %}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+{% if provider.id == "openid" %}
+{% for brand in provider.get_brands %}
+<li>
+  <a title="{{brand.name}}" class="socialaccount_provider {{provider.id}} {{brand.id}}"
+    href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
+    {{brand.name}}
+  </a>
+</li>
+{% endfor %}
+{% endif %}
+<li>
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
+    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+    {% if provider.name == 'Facebook' %}
+    <div class="fb-login-button" data-size="medium" data-button-type="continue_with" data-layout="default"
+      data-auto-logout-link="false" data-use-continue-as="true" data-width=""
+      data-onlogin="fb_authenticate"></div>
+    <script>
+      function fb_authenticate() {
+        window.location = '{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}';
+      }
+    </script>
+    {% else %}
+    {{provider.name}}
+    {% endif %}
+  </a>
+</li>
+{% endfor %}
+
+<script async defer crossorigin="anonymous"
+  src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v7.0&appId={{settings.FACEBOOK_APP_ID}}&autoLogAppEvents=1"
+  nonce="KJx9rmK9"></script>
