@@ -1,0 +1,161 @@
+.main-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 3rem;
+
+  .welcome-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;
+
+    img {
+      height: 100px;
+      margin-left: 2rem;
+    }
+  }
+  .introduction {
+    display: flex;
+    align-items: center;
+    background-color: aliceblue;
+    border-radius: 15px;
+    padding: 2rem;
+  }
+  img {
+    height: 70px;
+    margin-left: 2rem;
+  }
+}
+
+.initial-params {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.2rem;
+  flex-wrap: wrap;
+
+  input {
+    width: 70px !important;
+  }
+  label {
+    margin-right: 1rem !important;
+    font-weight: 700;
+  }
+}
+
+.method-options {
+  margin-top: 2rem;
+  label {
+    margin-right: 1rem !important;
+    width: 100px;
+    font-weight: 700;
+  }
+}
+
+.initial-params-container {
+  background-color: aliceblue;
+  padding: 1rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  width: 50%;
+  height: 50vh;
+  overflow-y: hidden;
+}
+.methods-main-container{
+  margin-top: 3rem;
+  h2 {
+    margin-left: 3rem;
+  }
+}
+
+.method-container {
+  img {
+    height: 100px;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    align-self: center;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  label {
+    width: 30px;
+    text-align: left;
+  }
+}
+.layers-container {
+  width: 50%;
+  background-color: aliceblue;
+  height: 50vh;
+  margin-left: 1rem;
+  padding: 1.2rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  overflow-y: scroll;
+  display: flex;
+  justify-content: center;
+
+  .layers-side {
+    width: 100%;
+    input, select {
+      margin-left: 15px;
+    }
+    .title {
+      input {
+        width: 50px;
+        margin-left: 10px;
+        margin-top: 0.5rem;
+      }
+    }
+    .layer-input {
+      margin-bottom: 0.6rem;
+      label {
+        font-size: 0.8rem;
+        font-weight: bold;
+      }
+
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+.thickness-input{
+  input {
+    width: 70px;
+    margin-left: 15px;
+  }
+}
+
+.layer-group{
+  select {
+    width: 200px;
+    margin-left: 15px;
+  }
+}
+
+.middle-container {
+  margin-left: 3vw;
+  margin-right: 3vw
+}
+.maxwell-file {
+  label {
+    width: 100% !important;
+  }
+}
+.inclusions-container {
+  border: 1px solid #dddddd;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    width: 50px;
+  }
+}

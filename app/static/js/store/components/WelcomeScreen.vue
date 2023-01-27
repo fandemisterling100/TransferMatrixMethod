@@ -1,12 +1,12 @@
 <template>
-  <div class="main-container">
+  <div class="main-container container">
     <div class="welcome-header">
       <h3>Transfer Matrix Method</h3>
       <img src="https://cdn-icons-png.flaticon.com/512/508/508970.png" alt="semillero">
     </div>
     <div class="introduction">
       <div>
-        <h5>Introducción del método y la App</h5>
+        <h5>Introduction to the method</h5>
         <div>
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
         </div>
@@ -17,21 +17,19 @@
     </div>
     <div class="d-flex w-50 justify-content-center align-items-center mt-5">
       <b-form-select v-model="type" :options="options" id="input-type"></b-form-select>
-      <b-button variant="success" class="ml-3">Ir</b-button>
+      <b-button variant="success" class="ml-3" @click="goToMethods">Go</b-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex"
+import { mapState, mapActions, mapMutations } from "vuex"
 export default {
-  components: {
-  },
   data() {
     return {
       type: null,
       options: [
-        { value: null, text: 'Respuesta' },
+        { value: null, text: 'Type' },
         { value: 'angular', text: 'Angular' },
         { value: 'espectral', text: 'Espectral' },
       ],
@@ -42,17 +40,18 @@ export default {
     }),
   },
   methods: {
-    ...mapActions({
-
+    ...mapMutations({
+      setCurrentPage: "transfer/setCurrentPage",
+      setType: "transfer/setType",
     }),
+    goToMethods() {
+      this.setType(this.type)
+      if (this.type) {
+        this.setCurrentPage('second')
+      }
+    }
   },
   mounted() {
   },
 }
 </script>
-
-<style scoped>
->>>.button {
-  width: 50%;
-}
-</style>
