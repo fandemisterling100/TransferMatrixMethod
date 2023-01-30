@@ -130,7 +130,7 @@
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3 mb-0"
               >
-                <b-form-select v-model="layer.model" :id="`layer-${index+1}`"  @input="openMethodModal($event, 'layer')">
+                <b-form-select v-model="layer.model" :id="`layer-${index+1}`"  @input="openMethodModal($event, `layer-${index+1}`)">
                   <b-form-select-option 
                     :value="option.value"
                     v-for="(option, index) in methodOptions"
@@ -157,13 +157,21 @@
       </div>
     </div>
     <div class="d-flex justify-content-center align-items-center">
-      <b-button variant="info" class="align-self-end mt-4">Calculate</b-button>
+      <b-button variant="info" class="align-self-end mt-4" @click="calculate">Calculate</b-button>
     </div>
     <!-- Modal Upload -->
     <b-modal id="modal-upload" title="Upload file" centered>
       <b-form-group label="File" label-cols-sm="2">
-        <b-form-file id="file-default" accept=".csv, .txt"></b-form-file>
+        <b-form-file id="file-default" accept=".csv, .txt" v-model="file"></b-form-file>
       </b-form-group>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="success" @click="uploadFile(ok)">
+          OK
+        </b-button>
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
 
     <!-- Modal Dielectric -->
@@ -349,6 +357,14 @@
           </b-form-group>
         </div>
       </div>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="success"  @click="setDielectricMethod(ok)">
+          OK
+        </b-button>
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
 
     <!-- Modal Manually -->
@@ -370,6 +386,14 @@
       >
         <b-form-input id="manual-k" v-model="manual.k" class="ml-3" type="number" step="0.1"></b-form-input>
       </b-form-group>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="success"  @click="setManualMethod(ok)">
+          OK
+        </b-button>
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
 
     <!-- Modal Effective Medium Theories -->
@@ -391,7 +415,7 @@
         <div class="w-100">
           <div class="w-100">
             <b-form-group
-              label="εm"
+              label="ε"
               label-for="maxwell-em"
               label-align-sm="right"
               class="d-flex align-items-center mr-3"
@@ -425,38 +449,38 @@
 
               <div v-if="maxwell.emManual === 'e'" class="d-flex align-items-center">
                 <b-form-group
-                  label="ε1m"
+                  label="ε1"
                   label-for="manual-e1m"
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3"
                 >
-                  <b-form-input id="manual-e1m" v-model="manual.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-e1m" v-model="maxwell.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                 </b-form-group>
                 <b-form-group
-                  label="ε2m"
+                  label="ε2"
                   label-for="manual-e2m"
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3 ml-3"
                 >
-                  <b-form-input id="manual-e2m" v-model="manual.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-e2m" v-model="maxwell.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
                 </b-form-group>
               </div>
               <div v-if="maxwell.emManual === 'nk'" class="d-flex align-items-center">
                 <b-form-group
-                  label="nm"
+                  label="n"
                   label-for="manual-nm"
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3"
                 >
-                  <b-form-input id="manual-nm" v-model="manual.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-nm" v-model="maxwell.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                 </b-form-group>
                 <b-form-group
-                  label="km"
+                  label="k"
                   label-for="manual-km"
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3 ml-3"
                 >
-                  <b-form-input id="manual-km" v-model="manual.km" class="ml-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-km" v-model="maxwell.km" class="ml-3" type="number" step="0.1"></b-form-input>
                 </b-form-group>
               </div>
             </div>
@@ -512,7 +536,7 @@
 
                     <div v-if="inclusion.manual === 'e'" class="d-flex align-items-center">
                       <b-form-group
-                        label="ε1m"
+                        label="ε1"
                         :label-for="`manual-e1m-${index+1}`"
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3"
@@ -520,7 +544,7 @@
                         <b-form-input :id="`manual-e1m-${index+1}`" v-model="inclusion.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                       </b-form-group>
                       <b-form-group
-                        label="ε2m"
+                        label="ε2"
                         :label-for="`manual-e2m-${index+1}`"
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3 ml-3"
@@ -530,7 +554,7 @@
                     </div>
                     <div v-if="inclusion.manual === 'nk'" class="d-flex align-items-center">
                       <b-form-group
-                        label="nm"
+                        label="n"
                         :label-for="`manual-nm-${index+1}`"
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3"
@@ -538,7 +562,7 @@
                         <b-form-input :id="`manual-nm-${index+1}`" v-model="inclusion.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                       </b-form-group>
                       <b-form-group
-                        label="km"
+                        label="k"
                         :label-for="`manual-km-${index+1}`"
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3 ml-3"
@@ -783,7 +807,7 @@
 
                 <div v-if="component.manual === 'e'" class="d-flex align-items-center">
                   <b-form-group
-                    label="ε1i"
+                    label="ε1"
                     :label-for="`component-e1i-${index+1}`"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -791,7 +815,7 @@
                     <b-form-input :id="`component-e1i-${index+1}`" v-model="component.e1i" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="ε2i"
+                    label="ε2"
                     :label-for="`component-e2i-${index+1}`"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -801,7 +825,7 @@
                 </div>
                 <div v-if="component.manual === 'nk'" class="d-flex align-items-center">
                   <b-form-group
-                    label="ni"
+                    label="n"
                     :label-for="`component-ni-${index+1}`"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -809,7 +833,7 @@
                     <b-form-input :id="`component-ni-${index+1}`" v-model="component.ni" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="ki"
+                    label="k"
                     :label-for="`component-ki-${index+1}`"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -840,6 +864,14 @@
         </div>
          
       </div>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="success"  @click="setEffectiveMethod(ok)">
+          OK
+        </b-button>
+        <b-button size="sm" variant="danger" @click="cancel()">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
 
   </div>
@@ -862,6 +894,7 @@ export default {
       polarization: 'p',
       substrate: null, 
       host: null,
+      file: null,
       polarizationOptions: [
         { item: 'p', name: 'P' },
         { item: 's', name: 'S' },
@@ -968,6 +1001,7 @@ export default {
           volume: null,
         }
       ],
+      materials: {},
     }
   },
   computed: {
@@ -989,6 +1023,7 @@ export default {
   },
   methods: {
     ...mapActions({
+      sendData: "transfer/sendData",
     }),
     openMethodModal(method, entity) {
       this.$bvModal.show(`modal-${method}`)
@@ -1033,6 +1068,298 @@ export default {
     removeComponent(index) {
       this.components.splice(index, 1);
     },
+    renameFile(originalFile, newName) {
+      return new File([originalFile], newName, {
+          type: originalFile.type,
+          lastModified: originalFile.lastModified,
+      });
+    },
+    calculate() {
+      const formData = new FormData()
+      formData.append("initialAngle", this.initialAngle)
+      formData.append("finalAngle", this.finalAngle)
+      formData.append("angle", this.angle)
+      formData.append("steps", this.steps)
+      formData.append("initialWaveLength", this.initialWaveLength)
+      formData.append("finalWaveLength", this.finalWaveLength)
+      formData.append("waveLength", this.waveLength)
+      formData.append("polarization", this.polarization)
+      formData.append("substrate", this.substrate)
+      formData.append("host", this.host)
+      formData.append("materialsQuantity", 2 + this.layers.length)
+      
+      Object.keys(this.materials).forEach(key => {
+        // Different logic for maxwell and its inclusions
+        if (this.materials[key].option.includes('maxwell')) {
+          // Maxwell with file in the main E
+          if (this.materials[key].option.includes('file')) {
+            formData.append("materials", this.materials[key].value)
+          } else {
+            // Add manual data
+            let material = {}
+            material[key] = {}
+            Object.keys(this.materials[key]).forEach(subkey => {
+              // Omit inclusions data
+              if (!subkey.includes('inclusion')) {
+                material[key][subkey] = this.materials[key][subkey]
+              } else {
+                // Add inclusion data
+                if (this.materials[key][subkey].option == 'file') {
+                  const volume = this.materials[key][subkey].volume
+                  material[key][subkey] = {volume: volume}
+                  formData.append("materials", this.materials[key][subkey].value)
+                } else {
+                  material[key][subkey] = this.materials[key][subkey]
+                }
+              }
+            })
+            formData.append("materials", JSON.stringify(material))
+          }
+        } else if (this.materials[key].option.includes('bruggeman')) {
+          let material = {}
+          material[key] = {}
+          Object.keys(this.materials[key]).forEach(subkey => {
+            // Add component data
+            if (this.materials[key][subkey].option == 'file') {
+              const volume = this.materials[key][subkey].volume
+              material[key][subkey] = {volume: volume}
+              formData.append("materials", this.materials[key][subkey].value)
+            } else {
+              material[key][subkey] = this.materials[key][subkey]
+            }
+          })
+          formData.append("materials", JSON.stringify(material))
+          
+        } else if (this.materials[key].option === 'file' || this.materials[key].option.includes('file')) {  
+          formData.append("materials", this.materials[key].value)
+        } 
+        else if (this.materials[key].option === 'lorentz') {
+          // For Lorentz add two files, one for Em and another one for Ei
+          // Also add manual parameters en each case
+          if ('em' in this.materials[key]) {
+            formData.append("materials", this.materials[key].em.value)
+          } 
+          if ('e-em' in this.materials[key]) {
+            let material = {}
+            material[key] = this.materials[key]
+            formData.append("materials", JSON.stringify(material))
+          }
+          if ('ei' in this.materials[key]) {
+            formData.append("materials", this.materials[key].ei.value)
+          }
+          if ('e-ei' in this.materials[key]) {
+            let material = {}
+            material[key] = this.materials[key]
+            formData.append("materials", JSON.stringify(material))
+          }
+        } else {
+          let material = {}
+          material[key] = this.materials[key]
+          formData.append("materials", JSON.stringify(material))
+        }
+        if (key.includes('layer')) {
+          const index = key.split('-')[1] - 1 
+          let material = {}
+          material[key] = {
+            thickness: this.layers[index].thickness
+          }
+          formData.append("materials", JSON.stringify(material))
+        } 
+      });
+
+      this.sendData(formData);
+    }, 
+    uploadFile(method) {
+      // Get entity (subtract, host, layers) to update
+      // its option and file uploaded
+      let currentEntity = this.entityPointer
+      let data = {
+        option: 'file',
+        value: this.renameFile(this.file, currentEntity),
+      }
+      method();
+      this.materials[currentEntity] = data
+    }, 
+    setDielectricMethod(method) {
+      // get current material (substract, host or layer)
+      let currentEntity = this.entityPointer
+      const option = this.dielectricModel
+      let data = {
+        option: option,
+      }
+      // Identify dielectric method and get parameters
+      if (option === 'lorenz') {
+        data = {
+          ...data,
+          ne: this.lorenz.ne,
+          wo: this.lorenz.wo,
+          w: this.lorenz.w,
+          r: this.lorenz.r,
+        }
+      }
+
+      if (option === 'drude') {
+        data = {
+          ...data,
+          ne: this.drude.ne,
+          e: this.drude.e,
+          w: this.drude.w,
+          r: this.drude.r,
+        }
+      }
+
+      if (option === 'sellmeier') {
+        data = {
+          ...data,
+          a: this.sellmeier.a,
+          b: this.sellmeier.b,
+          lambdaO: this.sellmeier.lambdaO,
+        }
+      }
+
+      if (option === 'cauchy') {
+        data = {
+          ...data,
+          a: this.cauchy.a,
+          b: this.cauchy.b,
+          c: this.cauchy.c,
+        }
+      }
+
+      if (currentEntity.includes('layer')) {
+        const index = parseInt(currentEntity.split('-')[1]) - 1;
+        data = {
+          ...data,
+          thickness: this.layers[index].thickness,
+        }
+      }
+      method();
+      this.materials[currentEntity] = data
+    },
+    setManualMethod(method) {
+      let currentEntity = this.entityPointer
+      let data = {
+        option: 'manual',
+        k: this.manual.k,
+        n: this.manual.n,
+      }
+      method();
+      this.materials[currentEntity] = data
+    },
+    setEffectiveMethod(method) {
+      // Get current material (substract, host or layer)
+      let currentEntity = this.entityPointer
+      const option = this.effectiveMediumModel
+      let data = {
+        option: option,
+      }
+      // Identify dielectric method and get parameters
+      if (option === 'maxwell') {
+        // Send parameters for manual Maxwell
+        if (this.maxwell.em === 'manually') {
+          data[this.maxwell.emManual] = {
+            e1m: this.maxwell.e1m,
+            e2m: this.maxwell.e2m,
+            nm: this.maxwell.nm,
+            km: this.maxwell.km,
+          }
+        }
+        // Send file for Maxwell with filename 'entity-maxwell'
+        if (this.maxwell.em === 'file') {
+          const newFileName = `${currentEntity}-${option}`
+          data = {
+            option: `${option}-file`,
+            value: this.renameFile(this.maxwell.file, newFileName),
+          }
+        }
+
+        //  Add inclusions
+        this.inclusions.forEach((inclusion, index) => {
+          if (inclusion.method === "manually") {
+            data[`${currentEntity}-inclusion-${index + 1}`] = {
+              option: inclusion.manual,
+              e1m: inclusion.e1m,
+              e2m: inclusion.e2m,
+              km: inclusion.km,
+              nm: inclusion.nm,
+              volume: inclusion.volume,
+            }
+          }
+          if (inclusion.method === "file") {
+            const newFileName = `${currentEntity}-inclusion-${index + 1}`
+            data[`${currentEntity}-inclusion-${index + 1}`] = {
+              option: 'file',
+              value: this.renameFile(inclusion.file, newFileName),
+              volume: inclusion.volume,
+            }
+          }
+        });
+      }
+
+      if (option === 'lorentz') {
+        // Send parameters for manual Lorentz
+        if (this.lorentz.em === 'manually') {
+          data[`${this.lorentz.eiManual}-em`] = {
+            e1m: this.lorentz.e1m,
+            e2m: this.lorentz.e2m,
+            nm: this.lorentz.nm,
+            km: this.lorentz.km,
+          }
+        }
+        if (this.lorentz.ei === 'manually') {
+          data[`${this.lorentz.eiManual}-ei`] = {
+            e1i: this.lorentz.e1i,
+            e2i: this.lorentz.e2i,
+            ni: this.lorentz.ni,
+            ki: this.lorentz.ki,
+          }
+        }
+        // Send file for Lorentz with filename 'entity-lorentz'
+        if (this.lorentz.em === 'file') {
+          const newFileName = `${currentEntity}-em-${option}`
+          data['em'] = {
+            option: `${option}-file`,
+            value: this.renameFile(this.lorentz.file, newFileName),
+          }
+        }
+
+        if (this.lorentz.ei === 'file') {
+          const newFileName = `${currentEntity}-ei-${option}`
+          data['ei'] = {
+            option: `${option}-file`,
+            value: this.renameFile(this.lorentz.filei, newFileName),
+          }
+        }
+      }
+
+      if (option === 'bruggeman') {
+        //  Add components
+        this.components.forEach((component, index) => {
+          if (component.method === "manually") {
+            data[`${currentEntity}-component-${index + 1}`] = {
+              option: component.manual,
+              e1i: component.e1i,
+              e2i: component.e2i,
+              ni: component.ni,
+              ki: component.ki,
+              volume: component.volume,
+            }
+          }
+          if (component.method === "file") {
+            const newFileName = `${currentEntity}-component-${index + 1}`
+            data[`${currentEntity}-component-${index + 1}`] = {
+              option: 'file',
+              value: this.renameFile(component.file, newFileName),
+              volume: component.volume,
+            }
+          }
+        });
+      }
+
+      method();
+      console.log(data);
+      this.materials[currentEntity] = data
+    }
   },
   mounted() {
   },
