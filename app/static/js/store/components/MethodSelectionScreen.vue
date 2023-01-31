@@ -165,7 +165,7 @@
         <b-form-file id="file-default" accept=".csv, .txt" v-model="file"></b-form-file>
       </b-form-group>
       <template #modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success" @click="uploadFile(ok)">
+        <b-button size="sm" variant="success" @click="uploadFile(ok, 'modal-upload')">
           OK
         </b-button>
         <b-button size="sm" variant="danger" @click="cancel()">
@@ -358,7 +358,7 @@
         </div>
       </div>
       <template #modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success"  @click="setDielectricMethod(ok)">
+        <b-button size="sm" variant="success"  @click="setDielectricMethod(ok, 'modal-dielectric')">
           OK
         </b-button>
         <b-button size="sm" variant="danger" @click="cancel()">
@@ -387,7 +387,7 @@
         <b-form-input id="manual-k" v-model="manual.k" class="ml-3" type="number" step="0.1"></b-form-input>
       </b-form-group>
       <template #modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success"  @click="setManualMethod(ok)">
+        <b-button size="sm" variant="success"  @click="setManualMethod(ok, 'modal-manually')">
           OK
         </b-button>
         <b-button size="sm" variant="danger" @click="cancel()">
@@ -865,7 +865,7 @@
          
       </div>
       <template #modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success"  @click="setEffectiveMethod(ok)">
+        <b-button size="sm" variant="success"  @click="setEffectiveMethod(ok, 'modal-efective')">
           OK
         </b-button>
         <b-button size="sm" variant="danger" @click="cancel()">
@@ -1169,7 +1169,7 @@ export default {
 
       this.sendData(formData);
     }, 
-    uploadFile(method) {
+    uploadFile(method, modal) {
       // Get entity (subtract, host, layers) to update
       // its option and file uploaded
       let currentEntity = this.entityPointer
@@ -1179,8 +1179,10 @@ export default {
       }
       method();
       this.materials[currentEntity] = data
+      this.disableEntity()
+      this.cleanModal(modal)
     }, 
-    setDielectricMethod(method) {
+    setDielectricMethod(method, modal) {
       // get current material (substract, host or layer)
       let currentEntity = this.entityPointer
       const option = this.dielectricModel
@@ -1235,8 +1237,10 @@ export default {
       }
       method();
       this.materials[currentEntity] = data
+      this.disableEntity()
+      this.cleanModal(modal)
     },
-    setManualMethod(method) {
+    setManualMethod(method, modal) {
       let currentEntity = this.entityPointer
       let data = {
         option: 'manual',
@@ -1245,8 +1249,10 @@ export default {
       }
       method();
       this.materials[currentEntity] = data
+      this.disableEntity()
+      this.cleanModal(modal)
     },
-    setEffectiveMethod(method) {
+    setEffectiveMethod(method, modal) {
       // Get current material (substract, host or layer)
       let currentEntity = this.entityPointer
       const option = this.effectiveMediumModel
@@ -1357,9 +1363,110 @@ export default {
       }
 
       method();
-      console.log(data);
       this.materials[currentEntity] = data
-    }
+      this.disableEntity()
+      this.cleanModal(modal)
+    },
+    disableEntity() {
+      const currentEntity = this.entityPointer;
+      $( `#${currentEntity}` ).prop( "disabled", true );
+    },
+    cleanModal(modal) {
+      if (modal === 'modal-upload') {
+        this.file = null
+      }
+
+      if (modal === 'modal-dielectric') {
+        this.dielectricModel = null
+        this.lorenz = {
+          ne: null,
+          wo: null,
+          w: null,
+          r: null,
+        }
+        this.drude = {
+          ne: null,
+          e: null,
+          w: null,
+          r: null,
+        }
+        this.sellmeier = {
+          a: null,
+          b: null,
+          lambdaO: null,
+        }
+        this.cauchy = {
+          a: null,
+          b: null,
+          c: null,
+        }
+      }
+
+      if (modal === 'modal-manually') {
+        this.manual = {
+          n: null,
+          k: null,
+        }
+      }
+
+      if (modal === 'modal-efective') {
+        this.effectiveMediumModel = null
+
+        this.maxwell = {
+          em: null,
+          file: null,
+          emManual: null,
+          e1m: null,
+          e2m: null,
+          nm: null,
+          km: null,
+        }
+
+        this.inclusions = [
+          {
+            method: null,
+            file: null,
+            manual: null,
+            e1m: null,
+            e2m: null,
+            nm: null,
+            km: null,
+            volume: null,
+          }
+        ]
+
+        this.lorentz = {
+          em: null,
+          file: null,
+          emManual: null,
+          e1m: null,
+          e2m: null,
+          nm: null,
+          km: null,
+
+          ei: null,
+          filei: null,
+          eiManual: null,
+          e1i: null,
+          e2i: null,
+          ni: null,
+          ki: null,
+        }
+      }
+
+      this.components = [
+        {
+          method: null,
+          file: null,
+          manual: null,
+          e1i: null,
+          e2i: null,
+          ni: null,
+          ki: null,
+          volume: null,
+        }
+      ]
+    },
   },
   mounted() {
   },

@@ -39,13 +39,15 @@ class CalculateDataView(APIView):
         final_parameter = initial_parameters.get("finalAngle") if answer == 'angular ' else initial_parameters.get("finalWaveLength") 
         fixed_parameter = initial_parameters.get("waveLength") if answer == 'angular ' else initial_parameters.get("angle") 
         number_of_materials = initial_parameters.get("materialsQuantity") 
-        import ipdb; ipdb.set_trace()
+        #import ipdb; ipdb.set_trace()
 
-        if answer == "angular": 
+        """ if answer == "angular": 
             #materials = get_data_from_file(file)
             materials = []
             for i in range(0, materials):
                 list_n = []
                 list_k = []
                 if i == "file":
-                    file_name = ""
+                    file_name = "" """
+        print(request.data)
+        return Response({"SUCCESS": "Graph data created"}, status=status.HTTP_200_OK)

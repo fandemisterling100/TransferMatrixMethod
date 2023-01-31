@@ -20,6 +20,7 @@ const actions = {
     return Api.post(url, data).then((response) => {
       commit('setResult', response.data)
       commit('toggleLoadingResult', false)
+      commit('setCurrentPage', 'third')
       return response.data
     }).catch(error => {
       commit('toggleLoadingResult', false)
