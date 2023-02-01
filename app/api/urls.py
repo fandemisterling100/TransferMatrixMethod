@@ -1,9 +1,12 @@
 from django.urls import include, path
 from app.api import views
 
+# Name of this app (folder api) inside of the whole project (folder app)
 app_name = "api"
 
 urlpatterns = [
-    path("", views.UserViewSet.as_view(), name="example"),
+    # URL to receive post data from browser with all the information from the materials
+    # and initial parameters. Once the request is received, the view CalculateDataView is
+    # going to process it.
     path("transfer-method/", views.CalculateDataView.as_view(), name="calculate"),
 ]

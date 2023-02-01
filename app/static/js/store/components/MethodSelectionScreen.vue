@@ -1,9 +1,19 @@
 <template>
+  <!-- General container for all data -->
   <div class="methods-main-container w-100">
+    <!-- Initial parameters title on the second screen -->
     <h2 class="w-100 text-left">Initial Parameters</h2>
+    <!-- Container for the left middle of the screen where the initial parameters are located -->
     <div class="d-flex justify-content-center align-items-center middle-container">
       <div class="initial-params-container">
         <div class="initial-params">
+          <!-- List of form groups for every initial parameters. Every group has a label with the name
+          of the parameter and the actual input that can be a float number, dropdown or radio button. Each input
+          saves the value given by the user in the variable related to the v-model field. You can find
+          this variable in the data() section at the end of the file -->
+
+          <!-- From group for the initial angle, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is angular. Value saved in the initialAngle variable -->
           <b-form-group
             label="Initital angle"
             label-for="initial-angle"
@@ -14,6 +24,8 @@
             <b-form-input id="initial-angle" v-model="initialAngle" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the final angle, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is angular. Value saved in the finalAngle variable -->
           <b-form-group
             label="Final angle"
             label-for="final-angle"
@@ -24,6 +36,8 @@
             <b-form-input id="final-angle" v-model="finalAngle" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the angle, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is espectral. Value saved in the angle variable-->
           <b-form-group
             label="Angle"
             label-for="angle"
@@ -34,6 +48,8 @@
             <b-form-input id="angle" v-model="angle" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the steps, type integer. It is shown for both types of answer. 
+            Value saved in the steps variable-->
           <b-form-group
             label="Steps"
             label-for="steps"
@@ -43,6 +59,8 @@
             <b-form-input id="teps" v-model="steps" type="number"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the Initial Wave Length, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is espectral. Value saved in the initialWaveLength variable-->
           <b-form-group
             label="Initial Wave Length"
             label-for="initialWaveLength"
@@ -53,6 +71,8 @@
             <b-form-input id="initialWaveLength" v-model="initialWaveLength" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the Final Wave Length, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is espectral. Value saved in the finalWaveLength variable-->
           <b-form-group
             label="Final Wave Length"
             label-for="finalWaveLength"
@@ -63,6 +83,8 @@
             <b-form-input id="finalWaveLength" v-model="finalWaveLength" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
+          <!-- From group for the Wave Length, type float with steps of 0.1 in the spinner. It is shown just
+          if the answer selected by the user is angular. Value saved in the waveLength variable-->
           <b-form-group
             label="Wave Length"
             label-for="waveLength"
@@ -73,7 +95,9 @@
             <b-form-input id="waveLength" v-model="waveLength" type="number" step="0.1"></b-form-input>
           </b-form-group>
 
-          
+          <!-- From group for the Wave Length, type radio button (in this case the value will be a string: p or s). 
+            It is shown for both types of answer. Value saved in the polarization variable. The options rendered come from
+            the variable polarizationOptions on the data() at the end of the file-->          
           <b-form-group 
           label="Polarization" 
           label-for="polarization"
@@ -89,12 +113,19 @@
             ></b-form-radio-group>
           </b-form-group>
         </div>
+        <!-- Container for substrate and host options -->
         <div class="d-flex justify-content-center align-items-center flex-column method-options">
+          <!-- From group for substrate. It contains the label and the dropdown with the method options.
+          This case is repeated for all materials. The method options comes from methodOptions and
+          each option is dinamically created as an html object using de v-for directive. -->
           <b-form-group 
             label="Substrate" 
             label-for="substrate"
             label-align-sm="right"
             class="d-flex align-items-center mr-3">
+            <!-- The event openMethodModal is triggered everytime the option selected on this dropdown changes.
+            We send the name of the material to know which material is being edited by the user, in this case
+            the substrate -->
             <b-form-select v-model="substrate" id="substrate" @input="openMethodModal($event, 'substrate')">
               <b-form-select-option 
                 :value="option.value"
@@ -111,19 +142,34 @@
             label-for="host"
             label-align-sm="right"
             class="d-flex align-items-center mr-3">
+            <!-- Show the same method options as the substrate and open the corresponding modal when the method
+            selected changes. Indicates that the host material is being edited at this moment -->
             <b-form-select v-model="host" :options="methodOptions" id="host" @input="openMethodModal($event, 'host')"></b-form-select>
           </b-form-group>
         </div>
       </div>
+      <!-- Right side container for the layers -->
       <div class="layers-container">
         <div class="layers-side">
           <div class="d-flex justify-content-between align-items-center title mb-4">
+            <!-- Titles inside the container to indicate layers and thicknesses -->
             <h5 class="mt-2">Layers</h5>
             <h5 class="mt-2 ml-4">Thicknesses</h5>
+            <!-- Button to add a new layer. the variant only indicates that we want a green button.
+            Every time the button is clicked the method addLayer is executed from the methods()
+            section at the end of this file -->
             <b-button variant="success" @click="addLayer">+</b-button>
           </div>
+          <!-- Create the html elements for each layer dinamically. The layers variable exits at the data() section. Layers variable
+          is an array of objects (objects are like python dictionaries). So each layer data is stored as an object. We 
+          iterate over every object in the list so we can create the visualization of the different layers with their labels, inputs
+          and buttons -->
           <div v-for="(layer, index) in layers" :key="index" class="w-100 d-flex align-items-center layer-input">
             <div class="d-flex justify-content-center align-items-center layer-group">
+              <!-- Form group to store the method or option selected for the 'n' current layer in the list of layers.
+              Everytime the method selected changes on the dropdown we call the openMethodModal method from the methods() section
+              below. We indicate that the `layer-${index+1}` is being edited at this moment. +1 is necessary since the indexation starts at 0
+              and we want to show layers starting from 1. The method is stored at the 'model' key within the layer object.-->
               <b-form-group 
                 :label="`Layer ${index+1}`" 
                 :label-for="`layer-${index+1}`"
@@ -141,6 +187,8 @@
                 </b-form-select>
               </b-form-group>
             </div>
+            <!-- Input for the thickness of the current 'n' layer. This value is stored at the key
+            thickness of the current layer. This is a floatfield with steps of 0.1 in the spinner. -->
             <div class="thickness-input d-flex justify-content-center align-items-center">
               <b-form-group 
                 :label="`Thickness ${index+1}`" 
@@ -151,16 +199,28 @@
                 <b-form-input :id="`thickness-${index+1}`" v-model="layer.thickness" type="number" step="0.1"></b-form-input>
               </b-form-group>
             </div>
+            <!-- Button to remove the current layer. Everytime the button is clicked the removeLayer is executed
+            from the methods() section. We pass the index in the list for this current layer so wen can know which object
+            should be deleted from the layers list. Danger indicates that we want a red button -->
             <b-button variant="danger" @click="removeLayer(index)">-</b-button>
           </div>
         </div>
       </div>
     </div>
+    <!-- Button to create a POST request with the data collected from all the materials -->
     <div class="d-flex justify-content-center align-items-center">
       <b-button variant="info" class="align-self-end mt-4" @click="calculate">Calculate</b-button>
     </div>
+
+    <!-- From here the section for modals starts. Modals are the windows opened when certain action occurs.
+    This elements are not being showed all the time, just when the method selected on
+    any of the materials changes. Each modal has its own name according to the method selected. -->
+
     <!-- Modal Upload -->
     <b-modal id="modal-upload" title="Upload file" centered>
+      <!-- Method to just upload a file for the material. It only allows csv and txt files. The value is
+      stores on the file key in data(). Once the button ok is clicked we upload the file and add the
+      material to the list of materials. Cancel button closes the modal -->
       <b-form-group label="File" label-cols-sm="2">
         <b-form-file id="file-default" accept=".csv, .txt" v-model="file"></b-form-file>
       </b-form-group>
@@ -176,6 +236,8 @@
 
     <!-- Modal Dielectric -->
     <b-modal id="modal-dielectric" title="Dielectric Function Models" centered>
+      <!-- Modal for dielectric method. It has a dropdown to select a model and show different options according to it.
+      The model selected is stored on the dielectricModel in data() -->
       <b-form-select v-model="dielectricModel" id="dielectric-model">
         <b-form-select-option 
           :value="option.value"
@@ -187,10 +249,16 @@
       </b-form-select>
 
       <!-- Lorenz -->
+      <!-- Container with fields and data for lorenz method -->
       <div class="method-container" v-show="dielectricModel === 'lorenz'">
         <p class="w-100 font-weight-bold text-left my-2">Lorenz Model: For Dielectrics</p>
+        <!-- Formula picture -->
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div>
+          <!-- Each of the following form groups contains the label according to the parameter
+          required by the method and the input field for numbers of type float with a step of 0.1 
+          in the spinner. Each of the values is stores inside of the object 'lorenz' in the data() section
+          -->
           <b-form-group
             label="Ne"
             label-for="ne"
@@ -230,10 +298,15 @@
       </div>
 
       <!-- Drude -->
+      <!-- Container for data when the user selects Drude model -->
       <div class="method-container" v-show="dielectricModel === 'drude'">
         <p class="w-100 font-weight-bold text-left my-2">Drude Model: For Metals</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div>
+          <!-- Each of the following form groups contains the label according to the parameter
+          required by the method and the input field for numbers of type float with a step of 0.1 
+          in the spinner. Each of the values is stores inside of the object 'Drude' in the data() section
+          -->
           <b-form-group
             label="Ne"
             label-for="drude-ne"
@@ -273,10 +346,15 @@
       </div>
 
       <!-- Sellmeier -->
+      <!-- Container for Sellmeier fields -->
       <div class="method-container" v-show="dielectricModel === 'sellmeier'">
         <p class="w-100 font-weight-bold text-left my-2">Sellmeier Model: For Transparents</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div>
+          <!-- Each of the following form groups contains the label according to the parameter
+          required by the method and the input field for numbers of type float with a step of 0.1 
+          in the spinner. Each of the values is stores inside of the object 'sellmeier' in the data() section
+          -->
           <b-form-group
             label="A"
             label-for="sellmeier-a"
@@ -301,6 +379,8 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
+            <!-- This field is disabled since we are taking it's value from the initial parameter field filled
+            by the user -->
             <b-form-input id="sellmeier-lambda" v-model="waveLength" class="ml-3" disabled></b-form-input>
           </b-form-group>
 
@@ -316,10 +396,15 @@
       </div>
 
        <!-- Couchy -->
+       <!-- Container for couchy fields -->
        <div class="method-container" v-show="dielectricModel === 'cauchy'">
         <p class="w-100 font-weight-bold text-left my-2">Cauchy Model: For Transparent Materials</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div>
+          <!-- Each of the following form groups contains the label according to the parameter
+          required by the method and the input field for numbers of type float with a step of 0.1 
+          in the spinner. Each of the values is stores inside of the object 'couchy' in the data() section
+          -->
           <b-form-group
             label="A"
             label-for="cauchy-a"
@@ -357,6 +442,8 @@
           </b-form-group>
         </div>
       </div>
+      <!-- Footer of the modal with two buttons, one to set the dielectric method for this material, 
+      and another one to just close the modal -->
       <template #modal-footer="{ ok, cancel }">
         <b-button size="sm" variant="success"  @click="setDielectricMethod(ok, 'modal-dielectric')">
           OK
@@ -369,6 +456,9 @@
 
     <!-- Modal Manually -->
     <b-modal id="modal-manually" title="Manually" centered>
+      <!-- Modal to set manual values for n and k. It just has this two input fields
+      and two buttons, the same buttons used in the other modals so we can set
+      the current method for the material or close the modal -->
       <b-form-group
         label="n"
         label-for="manual-n"
@@ -397,8 +487,10 @@
     </b-modal>
 
     <!-- Modal Effective Medium Theories -->
+    <!-- Modal for effective medium theories -->
     <b-modal id="modal-efective" title="Effective Medium Theories" centered size="lg">
       <b-form-select v-model="effectiveMediumModel" id="effective-model">
+        <!-- Dropdown to show the different effective medium theories and show the fields according to it -->
         <b-form-select-option 
           :value="option.value"
           v-for="(option, index) in effectiveMethods"
@@ -409,17 +501,20 @@
       </b-form-select>
 
       <!-- Maxwell -->
+      <!-- Container shown if the theory selected is Maxwell -->
       <div class="method-container" v-show="effectiveMediumModel === 'maxwell'">
         <p class="w-100 font-weight-bold text-left my-2">Maxwell Garnett Formula</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div class="w-100">
           <div class="w-100">
+            <!-- Form groups to show the label and input field for this theory -->
             <b-form-group
               label="ε"
               label-for="maxwell-em"
               label-align-sm="right"
               class="d-flex align-items-center mr-3"
             >
+              <!-- Dropwdown to show the manual and file options -->
               <b-form-select v-model="maxwell.em" id="maxwell-em" class="ml-3">
                 <b-form-select-option 
                   :value="option.value"
@@ -430,6 +525,8 @@
                 </b-form-select-option>
               </b-form-select>
             </b-form-group>
+
+            <!-- Fields shown in case the user chooses the manual option -->
             <div v-if="maxwell.em === 'manually'" class="d-flex align-items-center">
               <b-form-group 
                 label="" 
@@ -484,22 +581,29 @@
                 </b-form-group>
               </div>
             </div>
+
+            <!-- Input field to upload file in case the user chooses the file option -->
             <div v-if="maxwell.em === 'file'">
               <b-form-group label="File" label-cols-sm="2" class="ml-2">
                 <b-form-file id="file-maxwell-em" accept=".csv, .txt" v-model="maxwell.file" class="maxwell-file"></b-form-file>
               </b-form-group>
             </div>
-
+            
+            <!-- Inlusions section -->
             <div class="w-100">
               <div class="d-flex justify-content-between align-items-center title mb-4">
                 <h5 class="my-4"># Inclusions</h5>
                 <div class="d-flex justify-content-between align-items-center">
                   <h5 class="my-4 mr-4 pr-3">Volume Fraction</h5>
+                  <!-- Button to add an inclusion in the list, the variant only assings a green style to the button -->
                   <b-button variant="success" @click="addInclusion">+</b-button>
                 </div>
               </div>
+              <!-- We create all the components for the inclusion dinamically. It means that for every object in the list of inclusions
+              this html will have a copy of the div below, including all the field inputs. -->
               <div v-for="(inclusion, index) in inclusions" :key="index" class="w-100 d-flex justify-content-between align-items-center inclusions-container">
                 <div>
+                  <!-- Group to select file or manual method for the inclusion -->
                   <b-form-group 
                     :label="`ε${index+1}`" 
                     :label-for="`inclusion-maxwell-${index+1}`"
@@ -517,6 +621,7 @@
                     </b-form-select>
                   </b-form-group>
 
+                  <!-- Options shown in case the user chooses the manual option for the current inclusion -->
                   <div v-if="inclusion.method === 'manually'" class="ml-3 mt-3">
                     <b-form-group 
                       label="" 
@@ -571,6 +676,8 @@
                       </b-form-group>
                     </div>
                   </div>
+
+                  <!-- Options shown in case the user chooses the file option for the current inclusion -->
                   <div v-if="inclusion.method === 'file'" class="mt-3">
                     <b-form-group label="File" label-cols-sm="2" class="ml-3">
                       <b-form-file :id="`inclusion-file-${index+1}`" accept=".csv, .txt" v-model="inclusion.file" class="maxwell-file"></b-form-file>
@@ -579,6 +686,7 @@
 
                 </div>
 
+                <!-- Container for the volume of the current inclusion -->
                 <b-form-group 
                   :label="`f${index+1}`" 
                   :label-for="`maxwell-f-${index+1}`"
@@ -588,6 +696,8 @@
                   <b-form-input class="ml-4" :id="`maxwell-f-${index+1}`" v-model="inclusion.volume" type="number" step="0.1"></b-form-input>
                 </b-form-group>
 
+                <!-- Button to delete the current inclusion. There is a condition of index > 0 so we make sure that the user can
+                not delete the first inclusion since this method requires at least one inclusion -->
                 <b-button variant="danger" @click="removeInclusion(index)" v-if="index > 0">-</b-button>
               </div>
             </div>
@@ -596,10 +706,16 @@
       </div>
 
       <!-- Lorentz -->
+      <!-- Container to show fields for Lorentz theory -->
       <div class="method-container" v-show="effectiveMediumModel === 'lorentz'">
         <p class="w-100 font-weight-bold text-left my-2">The Lorents-Lorenz Relation</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         <div class="w-100">
+          <!-- Form groups to show the label and input field for this theory. Each field shown in the browser is contained
+          by one form group. The label option is the current text shown to the user. All of the values given by the user
+          on this method are stored in the lorentz object at the data() section -->
+
+          <!-- Em input -->
           <b-form-group
             label="εm"
             label-for="lorentz-em"
@@ -616,6 +732,8 @@
               </b-form-select-option>
             </b-form-select>
           </b-form-group>
+
+          <!-- Fields in case the user chooses manual method for Em -->
           <div v-if="lorentz.em === 'manually'" class="d-flex align-items-center">
             <b-form-group 
               label="" 
@@ -670,6 +788,8 @@
               </b-form-group>
             </div>
           </div>
+
+          <!-- Fields in case the user chooses file method for Em -->
           <div v-if="lorentz.em === 'file'">
             <b-form-group label="File" label-cols-sm="2" class="ml-2">
               <b-form-file id="file-lorentz-em" accept=".csv, .txt" v-model="lorentz.file" class="maxwell-file"></b-form-file>
@@ -677,6 +797,7 @@
           </div>
         </div>
 
+        <!-- Fields in case the user chooses manual method for Ei -->
         <div class="w-100 mt-3">
           <b-form-group
             label="εi"
@@ -748,6 +869,7 @@
               </b-form-group>
             </div>
           </div>
+          <!-- Fields in case the user chooses file method for Ei -->
           <div v-if="lorentz.ei === 'file'">
             <b-form-group label="File" label-cols-sm="2" class="ml-2">
               <b-form-file id="file-lorentz-ei" accept=".csv, .txt" v-model="lorentz.filei" class="maxwell-file"></b-form-file>
@@ -757,20 +879,26 @@
       </div>
 
       <!-- Bruggeman -->
+      <!-- Container for bruggeman theory fields -->
       <div class="method-container" v-show="effectiveMediumModel === 'bruggeman'">
         <p class="w-100 font-weight-bold text-left my-2">Bruggeman Relation</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
         
+        <!-- Components section -->
         <div class="w-100">
           <div class="d-flex justify-content-between align-items-center title mb-4">
             <h5 class="my-4"># Components</h5>
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="my-4 mr-4 pr-3">Volume Fractions</h5>
+              <!-- Button to add a new component in the front. the variant only assings a green color to the button -->
               <b-button variant="success" @click="addComponent">+</b-button>
             </div>
           </div>
+          <!-- Create all the html elements dinamically for every object inside of the components list. For each component we will
+          replicate the div below -->
           <div v-for="(component, index) in components" :key="index" class="w-100 d-flex justify-content-between align-items-center inclusions-container">
             <div>
+              <!-- Form group to choose method for the current method -->
               <b-form-group 
                 :label="`ε${index+1}`" 
                 :label-for="`component-${index+1}`"
@@ -788,6 +916,7 @@
                 </b-form-select>
               </b-form-group>
 
+              <!-- Fields shown when the user chooses the manual option -->
               <div v-if="component.method === 'manually'" class="ml-3 mt-3">
                 <b-form-group 
                   label="" 
@@ -842,6 +971,8 @@
                   </b-form-group>
                 </div>
               </div>
+
+              <!-- Fields shown when the user chooses the file option -->
               <div v-if="component.method === 'file'" class="mt-3">
                 <b-form-group label="File" label-cols-sm="2" class="ml-3">
                   <b-form-file :id="`component-file-${index+1}`" accept=".csv, .txt" v-model="component.file" class="maxwell-file"></b-form-file>
@@ -850,6 +981,7 @@
 
             </div>
 
+            <!-- Volume field for the current component -->
             <b-form-group 
               :label="`f${index+1}`" 
               :label-for="`component-f-${index+1}`"
@@ -859,11 +991,14 @@
               <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1"></b-form-input>
             </b-form-group>
 
+            <!-- Button to remove the current component. To have at least one component is mandatory, so that's why
+            we just show this button from the index 1 (second component) -->
             <b-button variant="danger" @click="removeComponent(index)" v-if="index > 0">-</b-button>
           </div>
         </div>
          
       </div>
+      <!-- Footer to set the effective medium theory or close the modal -->
       <template #modal-footer="{ ok, cancel }">
         <b-button size="sm" variant="success"  @click="setEffectiveMethod(ok, 'modal-efective')">
           OK
@@ -882,6 +1017,8 @@
 <script>
 import { mapState, mapActions } from "vuex"
 export default {
+  // Initialization of all the parameters and values inside of the forms,
+  // we also include here the options on each dropdown shown.
   data() {
     return {
       initialAngle: 0,
@@ -1001,14 +1138,20 @@ export default {
           volume: null,
         }
       ],
+      // Object send to backend with the information of all the materials 
+      // (host, substrate and layers)
       materials: {},
     }
   },
   computed: {
     ...mapState({
+      // Get the answer selected by the user on the first screen (angular, espectral)
       type: state => state.transfer.type,
     }),
     methodOptions() {
+      // The methods on the dropdopwn of host, substrate and layers is dinamically returned since
+      // it depends on the answer selected by the user in the first screen. We hide the manual option 
+      // for espectral answer
       let methods = [
         { value: null, text: 'Select a method...' },
         { value: 'upload', text: 'Upload file' },
@@ -1023,18 +1166,29 @@ export default {
   },
   methods: {
     ...mapActions({
+      // Method to send data to backend through the enpoint created
       sendData: "transfer/sendData",
     }),
+    // Function to open the modal and set the current entity. It means
+    // that we will know which modal is opened and from what material was opened
+    // (host, substrate, layer) in order to save the data under the corresponding
+    // key in the materials object above in the data() section
     openMethodModal(method, entity) {
       this.$bvModal.show(`modal-${method}`)
       this.entityPointer = entity
     },
+    // Function to add a new layer. This is to add an empty object
+    // to the list of layers. The v-for directive in the HTML will be in charge
+    // of creating dinamically all the elements needed.
     addLayer() {
       this.layers.push({
         model: null,
         thickness: 0,
       })
     },
+    // Function to add a new inclusion. This is to add an empty object
+    // to the list of inclusions. The v-for directive in the HTML will be in charge
+    // of creating dinamically all the elements needed.
     addInclusion() {
       this.inclusions.push({
         method: null,
@@ -1047,6 +1201,9 @@ export default {
         volume: null,
       })
     },
+    // Function to add a new component. This is to add an empty object
+    // to the list of components. The v-for directive in the HTML will be in charge
+    // of creating dinamically all the elements needed.
     addComponent() {
       this.components.push({
         method: null,
@@ -1059,22 +1216,33 @@ export default {
         volume: null,
       })
     },
+    // Method to remove a layer using it's position inside the array
     removeLayer(index) {
       this.layers.splice(index, 1);
     },
+    // Method to remove an inclusion using it's position inside the array
     removeInclusion(index) {
       this.inclusions.splice(index, 1);
     },
+    // Method to remove a component using it's position inside the array
     removeComponent(index) {
       this.components.splice(index, 1);
     },
+    // method to rename the files uploaded in order to know 
+    // which was the material related to this file in the backend
     renameFile(originalFile, newName) {
       return new File([originalFile], newName, {
           type: originalFile.type,
           lastModified: originalFile.lastModified,
       });
     },
+    // Method to be executed once the user clicks on the calculate button.
+    // Here we group all the data collected in one single variable to be sent
+    // to the backend
     calculate() {
+      // The variable that will contain all the data is called
+      // formData and it is a FormData type so we can send also files
+      // using this format.
       const formData = new FormData()
       formData.append("initialAngle", this.initialAngle)
       formData.append("finalAngle", this.finalAngle)
@@ -1088,6 +1256,7 @@ export default {
       formData.append("host", this.host)
       formData.append("materialsQuantity", 2 + this.layers.length)
       
+      // Iterate over all the materials to get the corresponding data
       Object.keys(this.materials).forEach(key => {
         // Different logic for maxwell and its inclusions
         if (this.materials[key].option.includes('maxwell')) {
@@ -1104,6 +1273,8 @@ export default {
                 material[key][subkey] = this.materials[key][subkey]
               } else {
                 // Add inclusion data
+                // Here the key means the material and subkey means the specific inclusion
+                // differentiated by index
                 if (this.materials[key][subkey].option == 'file') {
                   const volume = this.materials[key][subkey].volume
                   material[key][subkey] = {volume: volume}
@@ -1120,6 +1291,8 @@ export default {
           material[key] = {}
           Object.keys(this.materials[key]).forEach(subkey => {
             // Add component data
+            // Here the key means the material and subkey means the specific component
+            // differentiated by index
             if (this.materials[key][subkey].option == 'file') {
               const volume = this.materials[key][subkey].volume
               material[key][subkey] = {volume: volume}
@@ -1130,9 +1303,10 @@ export default {
           })
           formData.append("materials", JSON.stringify(material))
           
+          // If the option selected was just to upload a file we add it to the form data
         } else if (this.materials[key].option === 'file' || this.materials[key].option.includes('file')) {  
           formData.append("materials", this.materials[key].value)
-        } 
+        }
         else if (this.materials[key].option === 'lorentz') {
           // For Lorentz add two files, one for Em and another one for Ei
           // Also add manual parameters en each case
@@ -1153,10 +1327,12 @@ export default {
             formData.append("materials", JSON.stringify(material))
           }
         } else {
+          // Send data for all of the other methods as a JSON
           let material = {}
           material[key] = this.materials[key]
           formData.append("materials", JSON.stringify(material))
         }
+        // Add information about thickness on the layer
         if (key.includes('layer')) {
           const index = key.split('-')[1] - 1 
           let material = {}
@@ -1166,7 +1342,7 @@ export default {
           formData.append("materials", JSON.stringify(material))
         } 
       });
-
+      // Send data to the backend by calling a vue action.
       this.sendData(formData);
     }, 
     uploadFile(method, modal) {
@@ -1177,10 +1353,10 @@ export default {
         option: 'file',
         value: this.renameFile(this.file, currentEntity),
       }
-      method();
-      this.materials[currentEntity] = data
-      this.disableEntity()
-      this.cleanModal(modal)
+      method(); // Close modal
+      this.materials[currentEntity] = data // Add data for the current material to the materials list
+      this.disableEntity() // Disable the dropdown for this material
+      this.cleanModal(modal) // Clean all fields on the modal once it is closed
     }, 
     setDielectricMethod(method, modal) {
       // get current material (substract, host or layer)
@@ -1189,7 +1365,8 @@ export default {
       let data = {
         option: option,
       }
-      // Identify dielectric method and get parameters
+      // Identify dielectric method and get parameters depending on the
+      // option selected by the user
       if (option === 'lorenz') {
         data = {
           ...data,
@@ -1227,7 +1404,7 @@ export default {
           c: this.cauchy.c,
         }
       }
-
+      // Add thickness value in case the current material is a layer
       if (currentEntity.includes('layer')) {
         const index = parseInt(currentEntity.split('-')[1]) - 1;
         data = {
@@ -1235,22 +1412,23 @@ export default {
           thickness: this.layers[index].thickness,
         }
       }
-      method();
-      this.materials[currentEntity] = data
-      this.disableEntity()
-      this.cleanModal(modal)
+      method(); // Close modal
+      this.materials[currentEntity] = data // Add data for the current material to the materials list
+      this.disableEntity() // Disable the dropdown for this material
+      this.cleanModal(modal) // Clean all fields on the modal once it is closed
     },
     setManualMethod(method, modal) {
+      // Add manual n and k data
       let currentEntity = this.entityPointer
       let data = {
         option: 'manual',
         k: this.manual.k,
         n: this.manual.n,
       }
-      method();
-      this.materials[currentEntity] = data
-      this.disableEntity()
-      this.cleanModal(modal)
+      method(); // Close modal
+      this.materials[currentEntity] = data // Add data for the current material to the materials list
+      this.disableEntity() // Disable the dropdown for this material
+      this.cleanModal(modal) // Clean all fields on the modal once it is closed
     },
     setEffectiveMethod(method, modal) {
       // Get current material (substract, host or layer)
@@ -1362,16 +1540,19 @@ export default {
         });
       }
 
-      method();
-      this.materials[currentEntity] = data
-      this.disableEntity()
-      this.cleanModal(modal)
+      method(); // Close modal
+      this.materials[currentEntity] = data // Add data for the current material to the materials list
+      this.disableEntity() // Disable the dropdown for this material
+      this.cleanModal(modal) // Clean all fields on the modal once it is closed
     },
     disableEntity() {
+      // Set html disabled property to true on the dropdown for the current entity selected
       const currentEntity = this.entityPointer;
       $( `#${currentEntity}` ).prop( "disabled", true );
     },
     cleanModal(modal) {
+      // Set again the initial values to each modal according to the id
+      // od the moda received on this method
       if (modal === 'modal-upload') {
         this.file = null
       }

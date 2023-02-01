@@ -2,12 +2,19 @@ from rest_framework import serializers
 from app.users.models import User
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["username", "email", "name"]
-
 class TransferSerializer(serializers.Serializer):
+    """
+    Serializer for initial parameters. Each parameters has its own
+    data type:
+
+    CharField = String
+    IntegerField = Integer
+    FloatField = Float
+
+    None of the parameters is required to avoid errors with
+    the request but still all of them can be received
+    """
+
     initialAngle = serializers.FloatField(required=False)
     finalAngle = serializers.FloatField(required=False)
     angle = serializers.FloatField(required=False)

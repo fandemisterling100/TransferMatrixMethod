@@ -25,3 +25,6 @@ django-activity-stream==1.4.0
 
 # Extra settings
 django-extra-settings==0.7.0
+
+mpmath
+numpy

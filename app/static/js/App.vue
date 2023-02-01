@@ -1,4 +1,5 @@
 <template>
+  <!-- Main container of the three possible screens (initial or welcome, methods selection and graphs screen) -->
     <div class="d-flex justify-content-center align-items-center w-100 flex-column">
       <welcome-screen v-if="currentPage === 'first'"/>
       <method-selection-screen v-if="currentPage === 'second'"/>
