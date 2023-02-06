@@ -1,5 +1,6 @@
 from mpmath import sqrt
-
+import csv
+import json
 
 def get_nk(d):
     """
@@ -40,7 +41,7 @@ def get_nk_from_dielectric_fuction(epsilon_1, epsilon_2):
     a = sqrt(epsilon_1**2 + epsilon_2**2)
     n = sqrt((epsilon_1 + a) / 2)
     k = sqrt((-epsilon_1 + a) / 2)
-    return float(n), float(k)
+    return complex(float(n), float(k))
 
 
 def get_dielectric_funtion_from_nk(n, k):
@@ -52,11 +53,219 @@ def get_dielectric_funtion_from_nk(n, k):
     """
     epsilon_1 = n**2 - k**2
     epsilon_2 = 2 * n * k
-    return float(epsilon_1), float(epsilon_2)
+    return complex(float(epsilon_1), float(epsilon_2))
+
 
 def format_graph_data(data):
     """
-    Returns just the real part of every value from 
+    Returns just the real part of every value from
     the data
     """
     return [round(float(value.real), 2) for value in data]
+
+
+def get_values_from_file(file_, file_type):
+    wl_list = []
+    n_list = []
+    k_list = []
+    current_parameter = "n"
+
+    if file_type == "csv":
+        file_ = csv.DictReader(file_)
+        for line in file_:
+            # Getting two possible values from the row
+            current_wl = line.get("wl")
+            current_value = line.get("n")
+            try:
+                # Try to convert the numbers to float
+                current_wl = float(current_wl)
+                current_value = float(current_value)
+            except ValueError:
+                # The current row does not contain number,
+                # it has a new title where the k values start
+                current_parameter = "k"
+            else:
+                # As wl is repeated we are going to append values
+                # just when they don't exist in the current list
+                if current_wl not in wl_list:
+                    wl_list.append(current_wl)
+
+                # Check the current parameter to add it to the corresponding list
+                n_list.append(
+                    current_value
+                ) if current_parameter == "n" else k_list.append(current_value)
+
+    if file_type == "plain":
+        file_ = csv.reader(file_, delimiter="\t")
+        for line in file_:
+            # Skip empty line
+            if not len(line):
+                continue
+
+            # Getting two possible values from the row
+            current_wl = line[0]
+            current_value = line[1]
+            try:
+                # Try to convert the numbers to float
+                current_wl = float(current_wl)
+                current_value = float(current_value)
+            except ValueError:
+                # The current row does not contain number,
+                # it has a new title where the k values start
+                if current_value == "k":
+                    current_parameter = "k"
+            else:
+                # As wl is repeated we are going to append values
+                # just when they don't exist in the current list
+                if current_wl not in wl_list:
+                    wl_list.append(current_wl)
+
+                # Check the current parameter to add it to the corresponding list
+                n_list.append(
+                    current_value
+                ) if current_parameter == "n" else k_list.append(current_value)
+
+    if file_type == "x-yaml":
+        reading_data = False
+        for line in file_:
+            # We found the start of the data in the file
+            if "data:" in line:
+                reading_data = True
+                # Skip this line to start reading data in the next line
+                continue
+
+            # Start read data from each row. In this case
+            # each row is a string with numbers separeted by spaces
+            if reading_data:
+                # Delete spaces at the beginning and at the end of the row
+                line = line.strip()
+                # Get a list with values using the space as a separator
+                current_wl, current_n, current_k = line.split(" ")
+
+                # Add the values to the lists
+                wl_list.append(float(current_wl))
+                n_list.append(float(current_n))
+                k_list.append(float(current_k))
+
+    if len(k_list) == 0:
+        k_list = [0] * len(wl_list)
+    print(wl_list, n_list, k_list)
+    print(len(wl_list), len(n_list), len(k_list))
+    return wl_list, n_list, k_list
+
+
+def get_inclusions(material):
+
+    inclusions = []
+    for item_name in material:
+        if "inclusion" in item_name:
+            inclusions.append(material[item_name])
+    return inclusions
+
+
+def order_materials(materials):
+    """
+    Order materials:
+    1. Substrate
+    2. Layers
+    3. Host
+    """
+    ordered_materials = []
+    substrate = None
+    host = None
+
+    for material_name in materials:
+        material = materials[material_name]
+        if material_name == "substrate":
+            substrate = material
+        elif material_name == "host":
+            host = material
+        else:
+            ordered_materials.append({material_name: material})
+
+    # Add substrate at first position
+    if substrate:
+        ordered_materials.insert(0, {'substrate': substrate})
+
+    # Add host to last position
+    if host:
+        ordered_materials.append({'host': host})
+
+    print(ordered_materials)
+    return ordered_materials
+
+def group_materials(materials):
+    
+    grouped_materials = {}
+    
+    for material in materials:
+        if isinstance(material, str):
+            # Plain data
+            material = json.loads(material)
+            for material_name in material.keys():
+                if material_name not in grouped_materials:
+                    grouped_materials[material_name] = {}
+                                        
+                for parameter in material[material_name]:
+                    grouped_materials[material_name][parameter] = material[material_name][parameter]
+        else:
+            # File
+            material_name = material.name  
+            method = 'upload-file'
+            
+            if 'maxwell' in material_name:
+                material_name = material_name.split('-maxwell')[0]
+                method = 'maxwell'
+                
+            if 'lorentz' in material_name:
+                material_name = material_name.split('-lorentz')[0]
+                method = 'lorentz'
+                
+                if 'em' in material_name or 'ei' in material_name:
+                    current_submaterial = 'em' if 'em' in material_name else 'ei'
+                    base_material_name = material_name.split(f'-{current_submaterial}')[0]
+                    
+                    # Add material key of doesnt exist on the grouped materials
+                    if base_material_name not in grouped_materials:
+                        grouped_materials[base_material_name] = {}
+                    
+                    # Option already added to em
+                    if current_submaterial in grouped_materials[base_material_name]:
+                        grouped_materials[base_material_name][current_submaterial]['file'] = material
+                    else:
+                        # Add em to material
+                        grouped_materials[base_material_name][current_submaterial] = {}
+                        grouped_materials[base_material_name][current_submaterial]['file'] = material
+                
+                # Add method and move to the next material
+                grouped_materials[base_material_name]['option'] = method
+                continue
+            
+            if 'bruggeman' in material_name:
+                material_name = material_name.split('-bruggeman')[0]
+                method = 'bruggeman'
+                
+            if 'inclusion' in material_name or 'component' in material_name:
+                base_material_name = material_name.split('-inclusion' if 'inclusion' in material_name else '-component')[0]
+                # Material already in dictionary keys
+                if base_material_name in grouped_materials:
+                    # Inclusion/component already in material dictionary
+                    if material_name in grouped_materials[base_material_name]:
+                        grouped_materials[base_material_name][material_name]['file'] = material
+                    else:
+                        # Add inclusion/component and file to material dictionary
+                        grouped_materials[base_material_name][material_name] = {}
+                        grouped_materials[base_material_name][material_name]['file'] = material
+                else:
+                    # Add material to dict
+                    grouped_materials[base_material_name] = {}
+                    material_name = base_material_name
+                
+            else:
+                if material_name not in grouped_materials:
+                    grouped_materials[material_name] = {}
+                
+                grouped_materials[material_name]['file'] = material
+                grouped_materials[material_name]['option'] = method
+    
+    return grouped_materials

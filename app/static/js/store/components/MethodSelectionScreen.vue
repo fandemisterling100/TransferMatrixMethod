@@ -164,7 +164,7 @@
           is an array of objects (objects are like python dictionaries). So each layer data is stored as an object. We 
           iterate over every object in the list so we can create the visualization of the different layers with their labels, inputs
           and buttons -->
-          <div v-for="(layer, index) in layers" :key="index" class="w-100 d-flex align-items-center layer-input">
+          <div v-for="(layer, index) in layers" :key="index" class="w-100 d-flex align-items-start layer-input">
             <div class="d-flex justify-content-center align-items-center layer-group">
               <!-- Form group to store the method or option selected for the 'n' current layer in the list of layers.
               Everytime the method selected changes on the dropdown we call the openMethodModal method from the methods() section
@@ -189,15 +189,20 @@
             </div>
             <!-- Input for the thickness of the current 'n' layer. This value is stored at the key
             thickness of the current layer. This is a floatfield with steps of 0.1 in the spinner. -->
-            <div class="thickness-input d-flex justify-content-center align-items-center">
-              <b-form-group 
-                :label="`Thickness ${index+1}`" 
-                :label-for="`thickness-${index+1}`"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3 mb-0"
-              >
-                <b-form-input :id="`thickness-${index+1}`" v-model="layer.thickness" type="number" step="0.1"></b-form-input>
-              </b-form-group>
+            <div>
+              <div class="thickness-input d-flex justify-content-center align-items-center">
+                <b-form-group 
+                  :label="`Thickness ${index+1}`" 
+                  :label-for="`thickness-${index+1}`"
+                  label-align-sm="right"
+                  class="d-flex align-items-center mr-3 mb-0"
+                >
+                  <b-form-input :id="`thickness-${index+1}`" v-model="layer.thickness" type="number" step="0.1"></b-form-input>
+                </b-form-group>
+              </div>
+              <span class="text-danger font-weight-bold error-message" v-show="(!layer.thickness || layer.thickness <= 0) && sentButtonPressed">
+                Thickness for layer {{ index + 1 }} is a mandatory field
+              </span>
             </div>
             <!-- Button to remove the current layer. Everytime the button is clicked the removeLayer is executed
             from the methods() section. We pass the index in the list for this current layer so wen can know which object
@@ -209,7 +214,7 @@
     </div>
     <!-- Button to create a POST request with the data collected from all the materials -->
     <div class="d-flex justify-content-center align-items-center">
-      <b-button variant="info" class="align-self-end mt-4" @click="calculate">Calculate</b-button>
+      <b-button variant="info" class="align-self-end mt-4" @click="validateData">Calculate</b-button>
     </div>
 
     <!-- From here the section for modals starts. Modals are the windows opened when certain action occurs.
@@ -222,7 +227,7 @@
       stores on the file key in data(). Once the button ok is clicked we upload the file and add the
       material to the list of materials. Cancel button closes the modal -->
       <b-form-group label="File" label-cols-sm="2">
-        <b-form-file id="file-default" accept=".csv, .txt" v-model="file"></b-form-file>
+        <b-form-file id="file-default" accept=".csv, .txt, .yml" v-model="file"></b-form-file>
       </b-form-group>
       <template #modal-footer="{ ok, cancel }">
         <b-button size="sm" variant="success" @click="uploadFile(ok, 'modal-upload')">
@@ -585,7 +590,7 @@
             <!-- Input field to upload file in case the user chooses the file option -->
             <div v-if="maxwell.em === 'file'">
               <b-form-group label="File" label-cols-sm="2" class="ml-2">
-                <b-form-file id="file-maxwell-em" accept=".csv, .txt" v-model="maxwell.file" class="maxwell-file"></b-form-file>
+                <b-form-file id="file-maxwell-em" accept=".csv, .txt, .yml" v-model="maxwell.file" class="maxwell-file"></b-form-file>
               </b-form-group>
             </div>
             
@@ -680,25 +685,29 @@
                   <!-- Options shown in case the user chooses the file option for the current inclusion -->
                   <div v-if="inclusion.method === 'file'" class="mt-3">
                     <b-form-group label="File" label-cols-sm="2" class="ml-3">
-                      <b-form-file :id="`inclusion-file-${index+1}`" accept=".csv, .txt" v-model="inclusion.file" class="maxwell-file"></b-form-file>
+                      <b-form-file :id="`inclusion-file-${index+1}`" accept=".csv, .txt, .yml" v-model="inclusion.file" class="maxwell-file"></b-form-file>
                     </b-form-group>
                   </div>
 
                 </div>
-
+                
                 <!-- Container for the volume of the current inclusion -->
-                <b-form-group 
-                  :label="`f${index+1}`" 
-                  :label-for="`maxwell-f-${index+1}`"
-                  label-align-sm="right"
-                  class="d-flex align-items-center mr-3 mb-0"
-                >
-                  <b-form-input class="ml-4" :id="`maxwell-f-${index+1}`" v-model="inclusion.volume" type="number" step="0.1"></b-form-input>
-                </b-form-group>
-
-                <!-- Button to delete the current inclusion. There is a condition of index > 0 so we make sure that the user can
-                not delete the first inclusion since this method requires at least one inclusion -->
-                <b-button variant="danger" @click="removeInclusion(index)" v-if="index > 0">-</b-button>
+                <div class="d-flex flex-column align-items-end justify-content-end">
+                  <!-- Button to delete the current inclusion. There is a condition of index > 0 so we make sure that the user can
+                  not delete the first inclusion since this method requires at least one inclusion -->
+                  <b-button variant="danger" @click="removeInclusion(index)" v-if="index > 0" class="mb-3">-</b-button>
+                  <b-form-group 
+                    :label="`f${index+1}`" 
+                    :label-for="`maxwell-f-${index+1}`"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3 mb-0"
+                  >
+                    <b-form-input class="ml-4" :id="`maxwell-f-${index+1}`" v-model="inclusion.volume" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                  <span class="text-danger font-weight-bold error-message mt-2" v-show="(!inclusion.volume || inclusion.volume <= 0) && okButtonPressed">
+                    Fraction volume is a mandatory field
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -710,170 +719,188 @@
       <div class="method-container" v-show="effectiveMediumModel === 'lorentz'">
         <p class="w-100 font-weight-bold text-left my-2">The Lorents-Lorenz Relation</p>
         <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
-        <div class="w-100">
-          <!-- Form groups to show the label and input field for this theory. Each field shown in the browser is contained
-          by one form group. The label option is the current text shown to the user. All of the values given by the user
-          on this method are stored in the lorentz object at the data() section -->
+        <div class="d-flex justify-content-between align-items-end w-100">
+          <div>
+            <div class="w-100">
+              <!-- Form groups to show the label and input field for this theory. Each field shown in the browser is contained
+              by one form group. The label option is the current text shown to the user. All of the values given by the user
+              on this method are stored in the lorentz object at the data() section -->
 
-          <!-- Em input -->
-          <b-form-group
-            label="εm"
-            label-for="lorentz-em"
-            label-align-sm="right"
-            class="d-flex align-items-center mr-3"
-          >
-            <b-form-select v-model="lorentz.em" id="lorentz-em" class="ml-3">
-              <b-form-select-option 
-                :value="option.value"
-                v-for="(option, index) in epsilonOptions"
-                :key="index" 
-              >
-                {{ option.text }}
-              </b-form-select-option>
-            </b-form-select>
-          </b-form-group>
-
-          <!-- Fields in case the user chooses manual method for Em -->
-          <div v-if="lorentz.em === 'manually'" class="d-flex align-items-center">
-            <b-form-group 
-              label="" 
-              label-for="lorentz-em-manual"
-              label-align-sm="right"
-              class="d-flex align-items-center mr-3 ml-2"
-            >
-              <b-form-radio-group
-                v-model="lorentz.emManual"
-                :options="maxwellManualOptions"
-                class="d-flex align-items-center"
-                value-field="item"
-                text-field="name"
-                id="lorentz-em-manual"
-              ></b-form-radio-group>
-            </b-form-group>
-
-            <div v-if="lorentz.emManual === 'e'" class="d-flex align-items-center">
+              <!-- Em input -->
               <b-form-group
-                label="ε1m"
-                label-for="lorentz-manual-e1m"
+                label="εm"
+                label-for="lorentz-em"
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3"
               >
-                <b-form-input id="lorentz-manual-e1m" v-model="lorentz.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                <b-form-select v-model="lorentz.em" id="lorentz-em" class="ml-3">
+                  <b-form-select-option 
+                    :value="option.value"
+                    v-for="(option, index) in epsilonOptions"
+                    :key="index" 
+                  >
+                    {{ option.text }}
+                  </b-form-select-option>
+                </b-form-select>
               </b-form-group>
-              <b-form-group
-                label="ε2m"
-                label-for="lorentz-manual-e2m"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3 ml-3"
-              >
-                <b-form-input id="lorentz-manual-e2m" v-model="lorentz.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
-              </b-form-group>
+
+              <!-- Fields in case the user chooses manual method for Em -->
+              <div v-if="lorentz.em === 'manually'" class="d-flex align-items-center">
+                <b-form-group 
+                  label="" 
+                  label-for="lorentz-em-manual"
+                  label-align-sm="right"
+                  class="d-flex align-items-center mr-3 ml-2"
+                >
+                  <b-form-radio-group
+                    v-model="lorentz.emManual"
+                    :options="maxwellManualOptions"
+                    class="d-flex align-items-center"
+                    value-field="item"
+                    text-field="name"
+                    id="lorentz-em-manual"
+                  ></b-form-radio-group>
+                </b-form-group>
+
+                <div v-if="lorentz.emManual === 'e'" class="d-flex align-items-center">
+                  <b-form-group
+                    label="ε1m"
+                    label-for="lorentz-manual-e1m"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3"
+                  >
+                    <b-form-input id="lorentz-manual-e1m" v-model="lorentz.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="ε2m"
+                    label-for="lorentz-manual-e2m"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3 ml-3"
+                  >
+                    <b-form-input id="lorentz-manual-e2m" v-model="lorentz.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                </div>
+                <div v-if="lorentz.emManual === 'nk'" class="d-flex align-items-center">
+                  <b-form-group
+                    label="nm"
+                    label-for="lorentz-nm"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3"
+                  >
+                    <b-form-input id="lorentz-nm" v-model="lorentz.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="km"
+                    label-for="lorentz-km"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3 ml-3"
+                  >
+                    <b-form-input id="lorentz-km" v-model="lorentz.km" class="ml-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                </div>
+              </div>
+
+              <!-- Fields in case the user chooses file method for Em -->
+              <div v-if="lorentz.em === 'file'">
+                <b-form-group label="File" label-cols-sm="2" class="ml-2">
+                  <b-form-file id="file-lorentz-em" accept=".csv, .txt, .yml" v-model="lorentz.file" class="maxwell-file"></b-form-file>
+                </b-form-group>
+              </div>
             </div>
-            <div v-if="lorentz.emManual === 'nk'" class="d-flex align-items-center">
+
+            <!-- Fields in case the user chooses manual method for Ei -->
+            <div class="w-100 mt-3">
               <b-form-group
-                label="nm"
-                label-for="lorentz-nm"
+                label="εi"
+                label-for="lorentz-ei"
                 label-align-sm="right"
-                class="d-flex align-items-center mr-3"
+                class="d-flex align-items-center mr-4"
               >
-                <b-form-input id="lorentz-nm" v-model="lorentz.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                <b-form-select v-model="lorentz.ei" id="lorentz-ei" class="ml-3">
+                  <b-form-select-option 
+                    :value="option.value"
+                    v-for="(option, index) in epsilonOptions"
+                    :key="index" 
+                  >
+                    {{ option.text }}
+                  </b-form-select-option>
+                </b-form-select>
               </b-form-group>
-              <b-form-group
-                label="km"
-                label-for="lorentz-km"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3 ml-3"
-              >
-                <b-form-input id="lorentz-km" v-model="lorentz.km" class="ml-3" type="number" step="0.1"></b-form-input>
-              </b-form-group>
+              <div v-if="lorentz.ei === 'manually'" class="d-flex align-items-center">
+                <b-form-group 
+                  label="" 
+                  label-for="lorentz-ei-manual"
+                  label-align-sm="right"
+                  class="d-flex align-items-center mr-3 ml-2"
+                >
+                  <b-form-radio-group
+                    v-model="lorentz.eiManual"
+                    :options="maxwellManualOptions"
+                    class="d-flex align-items-center"
+                    value-field="item"
+                    text-field="name"
+                    id="lorentz-ei-manual"
+                  ></b-form-radio-group>
+                </b-form-group>
+
+                <div v-if="lorentz.eiManual === 'e'" class="d-flex align-items-center">
+                  <b-form-group
+                    label="ε1i"
+                    label-for="lorentz-manual-e1i"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3"
+                  >
+                    <b-form-input id="lorentz-manual-e1i" v-model="lorentz.e1i" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="ε2i"
+                    label-for="lorentz-manual-e2i"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3 ml-3"
+                  >
+                    <b-form-input id="lorentz-manual-e2i" v-model="lorentz.e2i" class="ml-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                </div>
+                <div v-if="lorentz.eiManual === 'nk'" class="d-flex align-items-center">
+                  <b-form-group
+                    label="ni"
+                    label-for="lorentz-ni"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3"
+                  >
+                    <b-form-input id="lorentz-ni" v-model="lorentz.ni" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                  <b-form-group
+                    label="ki"
+                    label-for="lorentz-ki"
+                    label-align-sm="right"
+                    class="d-flex align-items-center mr-3 ml-3"
+                  >
+                    <b-form-input id="lorentz-ki" v-model="lorentz.ki" class="ml-3" type="number" step="0.1"></b-form-input>
+                  </b-form-group>
+                </div>
+              </div>
+              <!-- Fields in case the user chooses file method for Ei -->
+              <div v-if="lorentz.ei === 'file'">
+                <b-form-group label="File" label-cols-sm="2" class="ml-2">
+                  <b-form-file id="file-lorentz-ei" accept=".csv, .txt, .yml" v-model="lorentz.filei" class="maxwell-file"></b-form-file>
+                </b-form-group>
+              </div>
             </div>
           </div>
-
-          <!-- Fields in case the user chooses file method for Em -->
-          <div v-if="lorentz.em === 'file'">
-            <b-form-group label="File" label-cols-sm="2" class="ml-2">
-              <b-form-file id="file-lorentz-em" accept=".csv, .txt" v-model="lorentz.file" class="maxwell-file"></b-form-file>
-            </b-form-group>
-          </div>
-        </div>
-
-        <!-- Fields in case the user chooses manual method for Ei -->
-        <div class="w-100 mt-3">
-          <b-form-group
-            label="εi"
-            label-for="lorentz-ei"
-            label-align-sm="right"
-            class="d-flex align-items-center mr-4"
-          >
-            <b-form-select v-model="lorentz.ei" id="lorentz-ei" class="ml-3">
-              <b-form-select-option 
-                :value="option.value"
-                v-for="(option, index) in epsilonOptions"
-                :key="index" 
-              >
-                {{ option.text }}
-              </b-form-select-option>
-            </b-form-select>
-          </b-form-group>
-          <div v-if="lorentz.ei === 'manually'" class="d-flex align-items-center">
-            <b-form-group 
-              label="" 
-              label-for="lorentz-ei-manual"
-              label-align-sm="right"
-              class="d-flex align-items-center mr-3 ml-2"
-            >
-              <b-form-radio-group
-                v-model="lorentz.eiManual"
-                :options="maxwellManualOptions"
-                class="d-flex align-items-center"
-                value-field="item"
-                text-field="name"
-                id="lorentz-ei-manual"
-              ></b-form-radio-group>
-            </b-form-group>
-
-            <div v-if="lorentz.eiManual === 'e'" class="d-flex align-items-center">
-              <b-form-group
-                label="ε1i"
-                label-for="lorentz-manual-e1i"
+          <div class="d-flex flex-column align-items-end justify-content-end">
+            <!-- Volume fraction input -->
+            <b-form-group
+                label="f"
+                label-for="lorentz-f"
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3"
               >
-                <b-form-input id="lorentz-manual-e1i" v-model="lorentz.e1i" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+              <b-form-input id="lorentz-f" v-model="lorentz.volume" class="ml-3" type="number" step="0.1"></b-form-input>
               </b-form-group>
-              <b-form-group
-                label="ε2i"
-                label-for="lorentz-manual-e2i"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3 ml-3"
-              >
-                <b-form-input id="lorentz-manual-e2i" v-model="lorentz.e2i" class="ml-3" type="number" step="0.1"></b-form-input>
-              </b-form-group>
-            </div>
-            <div v-if="lorentz.eiManual === 'nk'" class="d-flex align-items-center">
-              <b-form-group
-                label="ni"
-                label-for="lorentz-ni"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3"
-              >
-                <b-form-input id="lorentz-ni" v-model="lorentz.ni" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
-              </b-form-group>
-              <b-form-group
-                label="ki"
-                label-for="lorentz-ki"
-                label-align-sm="right"
-                class="d-flex align-items-center mr-3 ml-3"
-              >
-                <b-form-input id="lorentz-ki" v-model="lorentz.ki" class="ml-3" type="number" step="0.1"></b-form-input>
-              </b-form-group>
-            </div>
-          </div>
-          <!-- Fields in case the user chooses file method for Ei -->
-          <div v-if="lorentz.ei === 'file'">
-            <b-form-group label="File" label-cols-sm="2" class="ml-2">
-              <b-form-file id="file-lorentz-ei" accept=".csv, .txt" v-model="lorentz.filei" class="maxwell-file"></b-form-file>
-            </b-form-group>
+            <span class="text-danger font-weight-bold error-message" v-show="(!lorentz.volume || lorentz.volume <= 0) && okButtonPressed">
+              Fraction volume is a mandatory field
+            </span>
           </div>
         </div>
       </div>
@@ -975,32 +1002,37 @@
               <!-- Fields shown when the user chooses the file option -->
               <div v-if="component.method === 'file'" class="mt-3">
                 <b-form-group label="File" label-cols-sm="2" class="ml-3">
-                  <b-form-file :id="`component-file-${index+1}`" accept=".csv, .txt" v-model="component.file" class="maxwell-file"></b-form-file>
+                  <b-form-file :id="`component-file-${index+1}`" accept=".csv, .txt, .yml" v-model="component.file" class="maxwell-file"></b-form-file>
                 </b-form-group>
               </div>
 
             </div>
 
-            <!-- Volume field for the current component -->
-            <b-form-group 
-              :label="`f${index+1}`" 
-              :label-for="`component-f-${index+1}`"
-              label-align-sm="right"
-              class="d-flex align-items-center mr-3 mb-0"
-            >
-              <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1"></b-form-input>
-            </b-form-group>
-
-            <!-- Button to remove the current component. To have at least one component is mandatory, so that's why
-            we just show this button from the index 1 (second component) -->
-            <b-button variant="danger" @click="removeComponent(index)" v-if="index > 0">-</b-button>
+            <!-- Container for the volume of the current component -->
+            <div class="d-flex flex-column align-items-end justify-content-end">
+              <!-- Button to remove the current component. To have at least one component is mandatory, so that's why
+              we just show this button from the index 1 (second component) -->
+              <b-button variant="danger" @click="removeComponent(index)" v-if="index > 0" class="mb-3">-</b-button>
+              <!-- Volume field for the current component -->
+              <b-form-group 
+                :label="`f${index+1}`" 
+                :label-for="`component-f-${index+1}`"
+                label-align-sm="right"
+                class="d-flex align-items-center mr-3 mb-0"
+              >
+                <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1"></b-form-input>
+              </b-form-group>
+              <span class="text-danger font-weight-bold error-message mt-2" v-show="(!component.volume || component.volume <= 0) && okButtonPressed">
+                Fraction volume is a mandatory field
+              </span>
+            </div>
           </div>
         </div>
          
       </div>
       <!-- Footer to set the effective medium theory or close the modal -->
       <template #modal-footer="{ ok, cancel }">
-        <b-button size="sm" variant="success"  @click="setEffectiveMethod(ok, 'modal-efective')">
+        <b-button size="sm" variant="success"  @click="validateEffectiveMethod(ok, 'modal-efective')">
           OK
         </b-button>
         <b-button size="sm" variant="danger" @click="cancel()">
@@ -1021,6 +1053,8 @@ export default {
   // we also include here the options on each dropdown shown.
   data() {
     return {
+      sentButtonPressed: false,
+      okButtonPressed: false,
       initialAngle: 0,
       finalAngle: 90,
       angle: 0,
@@ -1088,11 +1122,6 @@ export default {
         nm: null,
         km: null,
       },
-      epsilonOptions: [
-        { value: null, text: 'Select a model...' },
-        { value: 'manually', text: 'Manually' },
-        { value: 'file', text: 'File' },
-      ],
       maxwellManualOptions: [
         { item: 'e', name: 'Dielectric Function' },
         { item: 'nk', name: 'Refractive Index' },
@@ -1125,6 +1154,8 @@ export default {
         e2i: null,
         ni: null,
         ki: null,
+
+        volume: null,
       },
       components: [
         {
@@ -1163,6 +1194,16 @@ export default {
       }
       return methods
     }, 
+    epsilonOptions() {
+      let options = [
+        { value: null, text: 'Select a model...' },
+        { value: 'file', text: 'File' },
+      ]
+      if (this.type === 'angular') {
+        options.push({ value: 'manually', text: 'Manually' })
+      }
+      return options
+    },
   },
   methods: {
     ...mapActions({
@@ -1236,6 +1277,14 @@ export default {
           lastModified: originalFile.lastModified,
       });
     },
+    validateData() {
+      this.sentButtonPressed = true;
+      const emptyThicknesses = (element) => !element.thickness || element.thickness <= 0;
+      const existEmptyThicknesses = this.layers.some(emptyThicknesses)
+      if (!existEmptyThicknesses) {
+        this.calculate();
+      }
+    },
     // Method to be executed once the user clicks on the calculate button.
     // Here we group all the data collected in one single variable to be sent
     // to the backend
@@ -1263,29 +1312,29 @@ export default {
           // Maxwell with file in the main E
           if (this.materials[key].option.includes('file')) {
             formData.append("materials", this.materials[key].value)
-          } else {
-            // Add manual data
-            let material = {}
-            material[key] = {}
-            Object.keys(this.materials[key]).forEach(subkey => {
-              // Omit inclusions data
-              if (!subkey.includes('inclusion')) {
-                material[key][subkey] = this.materials[key][subkey]
+          } 
+          // Add manual data
+          let material = {}
+          material[key] = {}
+          Object.keys(this.materials[key]).forEach(subkey => {
+            // Omit inclusions data
+            if (!subkey.includes('inclusion')) {
+              material[key][subkey] = this.materials[key][subkey]
+            } else {
+              // Add inclusion data
+              // Here the key means the material and subkey means the specific inclusion
+              // differentiated by index
+              if (this.materials[key][subkey].option == 'file') {
+                const volume = this.materials[key][subkey].volume
+                material[key][subkey] = {volume: volume}
+                formData.append("materials", this.materials[key][subkey].value)
               } else {
-                // Add inclusion data
-                // Here the key means the material and subkey means the specific inclusion
-                // differentiated by index
-                if (this.materials[key][subkey].option == 'file') {
-                  const volume = this.materials[key][subkey].volume
-                  material[key][subkey] = {volume: volume}
-                  formData.append("materials", this.materials[key][subkey].value)
-                } else {
-                  material[key][subkey] = this.materials[key][subkey]
-                }
+                material[key][subkey] = this.materials[key][subkey]
               }
-            })
-            formData.append("materials", JSON.stringify(material))
-          }
+            }
+          })
+          formData.append("materials", JSON.stringify(material))
+          
         } else if (this.materials[key].option.includes('bruggeman')) {
           let material = {}
           material[key] = {}
@@ -1313,17 +1362,17 @@ export default {
           if ('em' in this.materials[key]) {
             formData.append("materials", this.materials[key].em.value)
           } 
-          if ('e-em' in this.materials[key]) {
+          // Constant values
+          if ('e-em' in this.materials[key] || 'nk-em' in this.materials[key] ||
+            'e-ei' in this.materials[key] || 'nk-ei' in this.materials[key]) {
             let material = {}
             material[key] = this.materials[key]
             formData.append("materials", JSON.stringify(material))
           }
           if ('ei' in this.materials[key]) {
             formData.append("materials", this.materials[key].ei.value)
-          }
-          if ('e-ei' in this.materials[key]) {
             let material = {}
-            material[key] = this.materials[key]
+            material[key] = {volume: this.materials[key].ei.volume}
             formData.append("materials", JSON.stringify(material))
           }
         } else {
@@ -1392,6 +1441,7 @@ export default {
           ...data,
           a: this.sellmeier.a,
           b: this.sellmeier.b,
+          lambda: this.waveLength,
           lambdaO: this.sellmeier.lambdaO,
         }
       }
@@ -1402,6 +1452,7 @@ export default {
           a: this.cauchy.a,
           b: this.cauchy.b,
           c: this.cauchy.c,
+          lambda: this.waveLength,
         }
       }
       // Add thickness value in case the current material is a layer
@@ -1430,6 +1481,32 @@ export default {
       this.disableEntity() // Disable the dropdown for this material
       this.cleanModal(modal) // Clean all fields on the modal once it is closed
     },
+    validateEffectiveMethod(method, modal) {
+      const option = this.effectiveMediumModel
+      this.okButtonPressed = true
+      
+      if (option === 'maxwell') {
+        const emptyVolumes = (element) => !element.volume || element.volume <= 0;
+        const existEmptyVolumes = this.inclusions.some(emptyVolumes)
+        if (!existEmptyVolumes) {
+          this. setEffectiveMethod(method, modal);
+        }
+      }
+
+      if (option === 'lorentz') {
+        if (this.lorentz.volume || this.lorentz.volume > 0) {
+          this. setEffectiveMethod(method, modal);
+        }
+      }
+      
+      if (option === 'bruggeman') {
+        const emptyVolumes = (element) => !element.volume || element.volume <= 0;
+        const existEmptyVolumes = this.components.some(emptyVolumes)
+        if (!existEmptyVolumes) {
+          this. setEffectiveMethod(method, modal);
+        }
+      }
+    },  
     setEffectiveMethod(method, modal) {
       // Get current material (substract, host or layer)
       let currentEntity = this.entityPointer
@@ -1496,6 +1573,7 @@ export default {
             e2i: this.lorentz.e2i,
             ni: this.lorentz.ni,
             ki: this.lorentz.ki,
+            volume: this.lorentz.volume,
           }
         }
         // Send file for Lorentz with filename 'entity-lorentz'
@@ -1512,6 +1590,7 @@ export default {
           data['ei'] = {
             option: `${option}-file`,
             value: this.renameFile(this.lorentz.filei, newFileName),
+            volume: this.lorentz.volume,
           }
         }
       }
@@ -1544,6 +1623,7 @@ export default {
       this.materials[currentEntity] = data // Add data for the current material to the materials list
       this.disableEntity() // Disable the dropdown for this material
       this.cleanModal(modal) // Clean all fields on the modal once it is closed
+      this.okButtonPressed = false
     },
     disableEntity() {
       // Set html disabled property to true on the dropdown for the current entity selected

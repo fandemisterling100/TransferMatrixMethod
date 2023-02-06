@@ -7,30 +7,34 @@ class EfectiveMediumTheories(object):
     This class implements the main efective medium theories
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        epsilon_host_mg=1+0j,
+        volume_fractions_mg=[],
+        epsilon_inclusions_mg=[],
+        epsilon_host_ll=1+0j, 
+        volume_fractions_ll=0,
+        epsilon_inclusion_ll=1+0j,
+        ):
         self.epsilon_mg = (
             1 + 0j
         )  # effective dielectric function with Maxwell Garnett model
-        self.epsilon_host_mg = (
-            1 + 0j
-        )  # dielectric function of the host for Maxwell Garnett model
-        self.volume_fractions_mg = (
-            []
-        )  # volume fraction of the inclusion with Maxwell Garnett model
-        self.epsilon_inclusions_mg = (
-            []
-        )  # dielectric function of the inclusions for Maxwell Garnett model
+        self.epsilon_host_mg = (  # in case 'e' is selected
+            epsilon_host_mg  # dielectric function of the host for Maxwell Garnett model
+        )
+        self.volume_fractions_mg = volume_fractions_mg  # volume fraction of the inclusion with Maxwell Garnett model
+        self.epsilon_inclusions_mg = epsilon_inclusions_mg  # in case 'e' is selected in inclusions  # dielectric function of the inclusions for Maxwell Garnett model
         self.epsilon_ll = (
             1  # effective dielectric function with The Lorentz–Lorenz relation
         )
         self.epsilon_host_ll = (
-            1 + 0j
+            epsilon_host_ll
         )  # dielectric function of the host for The Lorentz–Lorenz relation
         self.volume_fractions_ll = (
-            0.5  # volume fraction of the inclusion with The Lorentz–Lorenz relation
+            volume_fractions_ll  # volume fraction of the inclusion with The Lorentz–Lorenz relation
         )
         self.epsilon_inclusion_ll = (
-            1 + 0j
+            epsilon_inclusion_ll
         )  # dielectric function of the inclusions for The Lorentz–Lorenz relation
         self.epsilon_br = 1 + 0j  # effective dielectric function with Bruggeman
         self.volume_fractions_br = []  # volume fraction of the phases with Bruggeman
@@ -69,7 +73,6 @@ class EfectiveMediumTheories(object):
             if z.real >= 0 and z.imag >= 0:
                 effective_dielectric_functions = z
         epsilon = effective_dielectric_functions[0]
-        print("funcion dielectrica", effective_dielectric_functions)
         n_k = get_nk_from_dielectric_fuction(epsilon.real, epsilon.imag)
         return n_k
 
@@ -134,7 +137,7 @@ class EfectiveMediumTheories(object):
         return n_k
 
 
-test = EfectiveMediumTheories()
+""" test = EfectiveMediumTheories()
 test.epsilon_host_mg = 2
 test.volume_fractions_mg = [0.7, 0.1, 0.1, 0.1, 0.1, 3, 5]
 test.epsilon_inclusions_mg = [9 + 9j, 1 + 3j, 8 + 9j, 7 + 1j, 2, 9 + 10j, 9 + 3j]
@@ -147,4 +150,4 @@ result3 = test.get_bruggeman()
 
 print(result)
 print(result2)
-print(result3)
+print(result3) """

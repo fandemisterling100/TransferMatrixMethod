@@ -4,30 +4,15 @@ from app.api.utils import get_nk_from_dielectric_fuction
 class DispersionModels(object):
     """This class implements the main dispersion models"""
 
-    def __init__(self):
+    def __init__(self, parameters):
 
         self.electron_charge = 1.602176634e-19  # in coulombs
         self.electron_mass = 9.10938356e-31  # in kilograms
         self.permitivitty_vacuum = 8.8541878128e-12  # in  F/m
-        self.list_parameters_lorenz = [
-            1,
-            1,
-            1,
-            1,
-        ]  # [electrons_per_unit, omega_0, omega, damping_coefficient]
-        self.list_parameters_drude = [
-            1,
-            1,
-            1,
-            1,
-        ]  # [electrons_per_unit, epsilon_infinito, omega, damping_coefficient]
-        self.list_parameters_sellmeier = [
-            1,
-            1,
-            2,
-            1,
-        ]  # [A, B, wavelength, wavelength_0]
-        self.list_parameters_cauchy = [1, 1, 1, 1]  # [A, B, C, wavelength]
+        self.parameters = parameters
+        # Lorenz :[electrons_per_unit, omega_0, omega, damping_coefficient]
+        # Drude [electrons_per_unit, epsilon_infinito, omega, damping_coefficient]
+        # Sellmeier [A, B, C, wavelength]
 
     def get_lorenz_model(self):
         """
@@ -36,11 +21,11 @@ class DispersionModels(object):
         *Receives a list of all parameters entered by the user
         * Return epsilon_1 and epsilon_2
         """
-        a = (self.electron_charge**2 * self.list_parameters_lorenz[0]) / (
+        a = (self.electron_charge**2 * self.parameters[0]) / (
             self.permitivitty_vacuum * self.electron_mass
         )
-        b = self.list_parameters_lorenz[1] ** 2 - self.list_parameters_lorenz[2] ** 2
-        c = self.list_parameters_lorenz[3] * self.list_parameters_lorenz[2]
+        b = self.parameters[1] ** 2 - self.parameters[2] ** 2
+        c = self.parameters[3] * self.parameters[2]
 
         epsilon_1 = 1 + (a * ((b) / (b**2 + c**2)))
         epsilon_2 = a * ((c) / (b**2 + c**2))
@@ -54,14 +39,14 @@ class DispersionModels(object):
         *Receives a list of all parameters entered by the user
         * Return epsilon_1 and epsilon_2
         """
-        a = (self.electron_charge**2 * self.list_parameters_drude[0]) / (
+        a = (self.electron_charge**2 * self.parameters[0]) / (
             self.permitivitty_vacuum * self.electron_mass
         )
-        b = a * self.list_parameters_drude[3]
-        c = self.list_parameters_drude[2] ** 2 + self.list_parameters_drude[3] ** 2
+        b = a * self.parameters[3]
+        c = self.parameters[2] ** 2 + self.parameters[3] ** 2
 
-        epsilon_1 = self.list_parameters_drude[1] - ((a) / (c))
-        epsilon_2 = (b) / (self.list_parameters_drude[2] * c)
+        epsilon_1 = self.parameters[1] - ((a) / (c))
+        epsilon_2 = (b) / (self.parameters[2] * c)
         n_k = get_nk_from_dielectric_fuction(epsilon_1, epsilon_2)
         return n_k
 
@@ -72,13 +57,10 @@ class DispersionModels(object):
         *Receives a list of all parameters entered by the user
         * Return epsilon_1 and epsilon_2
         """
-        a = self.list_parameters_sellmeier[1] * self.list_parameters_sellmeier[2] ** 2
-        b = (
-            self.list_parameters_sellmeier[2] ** 2
-            - self.list_parameters_sellmeier[3] ** 2
-        )
+        a = self.parameters[1] * self.parameters[2] ** 2
+        b = self.parameters[2] ** 2 - self.parameters[3] ** 2
 
-        epsilon_1 = self.list_parameters_sellmeier[0] + (a / b)
+        epsilon_1 = self.parameters[0] + (a / b)
         epsilon_2 = 0
         n_k = get_nk_from_dielectric_fuction(epsilon_1, epsilon_2)
         return n_k
@@ -90,9 +72,9 @@ class DispersionModels(object):
         *Receives a list of all parameters entered by the user
         * Return n and k
         """
-        a = self.list_parameters_cauchy[1] / self.list_parameters_cauchy[3] ** 2
-        b = self.list_parameters_cauchy[2] / self.list_parameters_cauchy[3]
+        a = self.parameters[1] / self.parameters[3] ** 2
+        b = self.parameters[2] / self.parameters[3]
 
-        n = self.list_parameters_cauchy[0] + a + b
+        n = self.parameters[0] + a + b
         k = 0
-        return n, k
+        return complex(n, k)

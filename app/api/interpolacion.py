@@ -28,7 +28,7 @@ def get_list(lista_de_tuplas):
     return w, n, k
 
 
-def interpolation(lista, w_i, w_f, respuesta="angular"):
+def interpolation(lista, w_i, w_f, steps, respuesta="angular"):
     """Esta funcion me realiza la interpolaciòn"""
 
     if respuesta == "angular":
@@ -36,7 +36,7 @@ def interpolation(lista, w_i, w_f, respuesta="angular"):
         pasos = 1
 
     elif respuesta == "espectral":
-        pasos = 200
+        pasos = steps
         if not (w_i < w_f):
             raise ValueError(
                 "La Longitud de onda inicial debe ser menor que longitud de onda final "
@@ -44,6 +44,9 @@ def interpolation(lista, w_i, w_f, respuesta="angular"):
 
     x = np.linspace(w_i, w_f, pasos)
     y_n = np.interp(x, lista[0], lista[1])
-    y_k = Y = np.interp(x, lista[0], lista[2])
+    y_k = np.interp(x, lista[0], lista[2])
 
-    return x, y_n, y_k
+    if respuesta == "angular":
+        return complex(y_n[0], y_k[0])
+    else:
+        return [complex(y_n[index], y_k[index]) for index in range(len(x))]

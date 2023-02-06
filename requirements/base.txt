@@ -28,3 +28,4 @@ django-extra-settings==0.7.0
 
 mpmath
 numpy
+sympy

@@ -49,7 +49,7 @@ class TransferMatrixMethod(object):
         *Returns  a list of the propations vectors in the x-component (complex),
         returns an element by per material
         """
-        list = []
+        list_ = []
         self.get_propagation_vectors()  # llamada recursiva
 
         for i in range(0, len(self.n)):
@@ -57,9 +57,9 @@ class TransferMatrixMethod(object):
             b = (self.propagation_vector_z) ** 2
             c = a - b
             kx = sqrt(c)
-            list.append(complex(kx))
-        setattr(self, "propagation_vectors_x", list)
-        return list
+            list_.append(complex(kx))
+        setattr(self, "propagation_vectors_x", list_)
+        return list_
 
     def get_phi(self):
         """
@@ -69,7 +69,7 @@ class TransferMatrixMethod(object):
         a list with the thicknesses of all system layers
         *Returns a list phi (complexes), returns an element by per layer
         """
-        list = []
+        list_ = []
         self.get_propagation_vectors()
 
         if len(self.thicknesses) > 0:
@@ -78,9 +78,9 @@ class TransferMatrixMethod(object):
                 b = self.n[0] / self.n[i + 1]
                 c = sin(self.theta)
                 d = a * sqrt(1 - (b * c) ** 2)
-                list.append(complex(d))
-        setattr(self, "list_phi", list)
-        return list
+                list_.append(complex(d))
+        setattr(self, "list_phi", list_)
+        return list_
 
     def get_reflection_fresnel_coefficients(self):
         """
@@ -91,7 +91,7 @@ class TransferMatrixMethod(object):
         a list_ni (complexes)
         *Returns the list_rij (complex), returns an element by per interface
         """
-        list = []
+        list_ = []
         self.get_propagation_vectors_x()
 
         if not (self.polarization in ["P", "S"]):
@@ -102,15 +102,15 @@ class TransferMatrixMethod(object):
                 a = self.propagation_vectors_x[i] - self.propagation_vectors_x[i + 1]
                 b = self.propagation_vectors_x[i] + self.propagation_vectors_x[i + 1]
                 r = a / b
-                list.append(r)
+                list_.append(r)
 
         for i in range(0, len(self.n) - 1):
             a = (self.n[i] ** 2) * self.propagation_vectors_x[i + 1]
             b = (self.n[i + 1] ** 2) * self.propagation_vectors_x[i]
             r = (a - b) / (a + b)
-            list.append(r)
-        setattr(self, "reflection_coefficients", list)
-        return list
+            list_.append(r)
+        setattr(self, "reflection_coefficients", list_)
+        return list_
 
     def get_trasmission_fresnel_coefficients(self):
         """
@@ -120,21 +120,21 @@ class TransferMatrixMethod(object):
         coefficients (calculated in the previous function (complex or floats))
         *Returns the list_tij (complex), returns an element by per interface
         """
-        list = []
+        list_ = []
         self.get_reflection_fresnel_coefficients()
 
         if not (self.polarization == "P"):
             for i in range(0, len(self.reflection_coefficients)):
                 tij = 1 + self.reflection_coefficients[i]
-                list.append(tij)
+                list_.append(tij)
 
         for i in range(0, len(self.reflection_coefficients)):
             a = self.n[i] / self.n[i + 1]
             b = 1 + self.reflection_coefficients[i]
             tij = a * b
-            list.append(tij)
-        setattr(self, "trasmission_coefficients", list)
-        return list
+            list_.append(tij)
+        setattr(self, "trasmission_coefficients", list_)
+        return list_
 
     def get_dinamical_matriz(self):
         """
@@ -143,15 +143,15 @@ class TransferMatrixMethod(object):
         *Recive two list the list_rij and list_tij (calculated in the previous functions )
         *Retur one list of matrix (complex or float) returns an element by per element in the list_rij
         """
-        list = []
+        list_ = []
         self.get_reflection_fresnel_coefficients()
         self.get_trasmission_fresnel_coefficients()
 
         for i, j in zip(self.reflection_coefficients, self.trasmission_coefficients):
             a = array([[1 / j, i / j], [i / j, 1 / j]])
-            list.append(a)
-        setattr(self, "dinamical_matrices", list)
-        return list
+            list_.append(a)
+        setattr(self, "dinamical_matrices", list_)
+        return list_
 
     def get_propagation_matriz(self):
         """
@@ -161,15 +161,15 @@ class TransferMatrixMethod(object):
         *Retur the a list of matriz (complexes) one for each layer of the system
 
         """
-        list = []
+        list_ = []
         self.get_phi()
 
         if len(self.thicknesses) > 0:
             for i in self.list_phi:
                 a = array([[exp(-1j * i), 0], [0, exp(1j * i)]])
-                list.append(a)
-        setattr(self, "propagation_matriz", list)
-        return list
+                list_.append(a)
+        setattr(self, "propagation_matriz", list_)
+        return list_
 
     def get_transfer_matrix(self):
         """

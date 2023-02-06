@@ -173,7 +173,7 @@ export default {
         borderColor: '#f87979',
         fill: false
       })
-      data.datasets.push({
+      /* data.datasets.push({
         label: 'Absortance',
         backgroundColor: '#A4C098',
         data: this.result.absortances,
@@ -186,7 +186,7 @@ export default {
         data: this.result.transmittance,
         borderColor: '#2ACAEA',
         fill: false
-      })
+      }) */
       return data
     },
   },
