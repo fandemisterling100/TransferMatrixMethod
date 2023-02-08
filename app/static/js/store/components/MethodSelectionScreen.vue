@@ -597,7 +597,7 @@
             <!-- Inlusions section -->
             <div class="w-100">
               <div class="d-flex justify-content-between align-items-center title mb-4">
-                <h5 class="my-4"># Inclusions</h5>
+                <h5 class="my-4">Inclusions</h5>
                 <div class="d-flex justify-content-between align-items-center">
                   <h5 class="my-4 mr-4 pr-3">Volume Fraction</h5>
                   <!-- Button to add an inclusion in the list, the variant only assings a green style to the button -->
@@ -914,7 +914,7 @@
         <!-- Components section -->
         <div class="w-100">
           <div class="d-flex justify-content-between align-items-center title mb-4">
-            <h5 class="my-4"># Components</h5>
+            <h5 class="my-4">Components</h5>
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="my-4 mr-4 pr-3">Volume Fractions</h5>
               <!-- Button to add a new component in the front. the variant only assings a green color to the button -->
@@ -1059,8 +1059,8 @@ export default {
       finalAngle: 90,
       angle: 0,
       steps: 50,
-      initialWaveLength: 0,
-      finalWaveLength: 0,
+      initialWaveLength: 0.1,
+      finalWaveLength: 0.2,
       waveLength: 0.1,
       polarization: 'p',
       substrate: null, 
@@ -1560,7 +1560,7 @@ export default {
       if (option === 'lorentz') {
         // Send parameters for manual Lorentz
         if (this.lorentz.em === 'manually') {
-          data[`${this.lorentz.eiManual}-em`] = {
+          data[`${this.lorentz.emManual}-em`] = {
             e1m: this.lorentz.e1m,
             e2m: this.lorentz.e2m,
             nm: this.lorentz.nm,

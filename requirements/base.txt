@@ -29,3 +29,4 @@ django-extra-settings==0.7.0
 mpmath
 numpy
 sympy
+XlsxWriter==3.0.5

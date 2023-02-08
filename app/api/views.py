@@ -12,12 +12,15 @@ from app.api.utils import (
     get_values_from_file,
     get_inclusions,
     group_materials,
+    process_file,
+    create_file,
+    get_current_vector,
 )
 from app.api.transfer_matrix_method import TransferMatrixMethod
 from app.api.efective_medium_theories import EfectiveMediumTheories
 from app.api.dispersion_models import DispersionModels
-from app.api.interpolacion import interpolation
 import csv
+from django.http import HttpResponse
 
 from app.api.serializers import TransferSerializer
 
@@ -71,208 +74,273 @@ class CalculateDataView(APIView):
 
         # Initialize list to store n,k values
         refractive_indexes = []
+        refractive_indexes_by_material = {}
         # Initialize thicknesses list
         thicknesses = []
 
         # Initialize volume list
         volumes = []
         
-        # Group materials 
+        # Group materials (create nested dictionaries with the info)
         materials = group_materials(materials)
 
         # Order materials (Substrate, layers, host)
         materials = order_materials(materials)
-        import ipdb; ipdb.set_trace()
 
         # Iterate over materials to get n, k
         # according to the method selected for each material
+
         for material in materials:
-            if isinstance(material, str):
-                material = json.loads(material)
-                for material_name in material.keys():
-                    material = material.get(material_name)
-                    option = material.get("option")
+            # There is just one key per dict (1 material = 1 dict in the list of dicts materials)
+            for material_name in material.keys():
+                material = material.get(material_name)
+                option = material.get("option")
+                refractive_indexes_by_material[material_name] = {}
 
-                    # Add layer thickness to the vector
-                    if "thickness" in material:
-                        thicknesses.append(float(material.get("thickness")))
+                # Add layer thickness to the vector
+                if "thickness" in material:
+                    thicknesses.append(float(material.get("thickness")))
 
-                    # MANUAL OPTION
-                    if option == "manual":
-                        n = float(material.get("n"))
-                        k = float(material.get("k"))
-                        complex_number = complex(n, k)
-                        refractive_indexes.append(complex_number)
+                # MANUAL OPTION
+                if option == "manual":
+                    n = float(material.get("n"))
+                    k = float(material.get("k"))
+                    method_result = complex(n, k)
 
-                    # DIELECTRIC FUNCTION OPTION: LORENZ
-                    if option == "lorenz":
-                        ne = float(material.get("ne"))
-                        wo = float(material.get("wo"))
-                        w = float(material.get("w"))
-                        r = float(material.get("r"))
+                # DIELECTRIC FUNCTION OPTION: LORENZ
+                if option == "lorenz":
+                    ne = float(material.get("ne"))
+                    wo = float(material.get("wo"))
+                    w = float(material.get("w"))
+                    r = float(material.get("r"))
 
-                        lorenz_parameters = [ne, wo, w, r]
-                        method = DispersionModels(lorenz_parameters)
-                        refractive_indexes.append(method.get_lorenz_model())
+                    lorenz_parameters = [ne, wo, w, r]
+                    method = DispersionModels(lorenz_parameters)
+                    method_result = method.get_lorenz_model()
 
-                    # DIELECTRIC FUNCTION OPTION: DRUDE
-                    if option == "drude":
-                        ne = float(material.get("ne"))
-                        e = float(material.get("e"))
-                        w = float(material.get("w"))
-                        r = float(material.get("r"))
+                # DIELECTRIC FUNCTION OPTION: DRUDE
+                if option == "drude":
+                    ne = float(material.get("ne"))
+                    e = float(material.get("e"))
+                    w = float(material.get("w"))
+                    r = float(material.get("r"))
 
-                        drude_parameters = [ne, e, w, r]
-                        method = DispersionModels(drude_parameters)
-                        refractive_indexes.append(method.get_drude_model())
+                    drude_parameters = [ne, e, w, r]
+                    method = DispersionModels(drude_parameters)
+                    method_result = method.get_drude_model()
 
-                    # DIELECTRIC FUNCTION OPTION: SELLMEIER
-                    if option == "sellmeier":
-                        a = float(material.get("a"))
-                        b = float(material.get("b"))
-                        lambda_0 = float(material.get("lambdaO"))
-                        lambda_f = float(material.get("lambda"))
+                # DIELECTRIC FUNCTION OPTION: SELLMEIER
+                if option == "sellmeier":
+                    a = float(material.get("a"))
+                    b = float(material.get("b"))
+                    lambda_0 = float(material.get("lambdaO"))
+                    lambda_f = float(material.get("lambda"))
 
-                        sellmeier_parameters = [a, b, lambda_f, lambda_0]
-                        method = DispersionModels(sellmeier_parameters)
-                        refractive_indexes.append(method.get_sellmeier_model())
+                    sellmeier_parameters = [a, b, lambda_f, lambda_0]
+                    method = DispersionModels(sellmeier_parameters)
+                    method_result = method.get_sellmeier_model()
 
-                    # DIELECTRIC FUNCTION OPTION: CAUCHY
-                    if option == "cauchy":
-                        a = float(material.get("a"))
-                        b = float(material.get("b"))
-                        c = float(material.get("c"))
-                        lambda_f = float(material.get("lambda"))
+                # DIELECTRIC FUNCTION OPTION: CAUCHY
+                if option == "cauchy":
+                    a = float(material.get("a"))
+                    b = float(material.get("b"))
+                    c = float(material.get("c"))
+                    lambda_f = float(material.get("lambda"))
 
-                        cauchy_parameters = [a, b, c, lambda_f]
-                        method = DispersionModels(cauchy_parameters)
-                        refractive_indexes.append(method.get_cauchy_model())
+                    cauchy_parameters = [a, b, c, lambda_f]
+                    method = DispersionModels(cauchy_parameters)
+                    method_result = method.get_cauchy_model()
 
-                    # EFFECTIVE MEDIUM THEORIES: MAXWELL
-                    if option == "maxwell":
-                        # Dielectric
-                        if "e" in material:
-                            e1m = float(material["e"]["e1m"])
-                            e2m = float(material["e"]["e2m"])
-                            comp = complex(e1m, e2m)
+                # EFFECTIVE MEDIUM THEORIES: MAXWELL
+                if option == "maxwell":
 
+                    # Dielectric
+                    if "e" in material:
+                    # Dielectric function selected
+                        e1m = float(material["e"]["e1m"])
+                        e2m = float(material["e"]["e2m"])
+                        comp = complex(e1m, e2m)
+                        
+                    # File selected
+                    elif "file" in material:
+                        file_ = material.get("file")
+                        comp = process_file(file_, initial_parameters, answer, steps)
+                        
+                        if isinstance(comp, list):
+                            comp = [get_dielectric_funtion_from_nk(val.real, val.imag) for val in comp]
                         else:
-                            nm = float(material["nk"]["nm"])
-                            km = float(material["nk"]["km"])
-                            comp = get_dielectric_funtion_from_nk(nm, km)
+                            comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
+                        
+                    # Refractive index selected
+                    else:
+                        nm = float(material["nk"]["nm"])
+                        km = float(material["nk"]["km"])
+                        comp = get_dielectric_funtion_from_nk(nm, km)
 
-                        inclusions = get_inclusions(material)
-                        e_list_inclusions = []
-                        for inclusion in inclusions:
-                            if inclusion.get("option") == "e":
-                                inclusion_e1m = float(inclusion["e1m"])
-                                inclusion_e2m = float(inclusion["e2m"])
-                                comp_inclusion = complex(inclusion_e1m, inclusion_e2m)
-                                e_list_inclusions.append(comp_inclusion)
-                            else:
-                                inclusion_nm = float(inclusion["nm"])
-                                inclusion_km = float(inclusion["km"])
-                                comp_inclusion = get_dielectric_funtion_from_nk(
-                                    inclusion_nm, inclusion_km
-                                )
-                                e_list_inclusions.append(comp_inclusion)
+                    inclusions = get_inclusions(material)
+                    e_list_inclusions = []
+                    for inclusion in inclusions:
+                         # Dielectric function selected
+                        if inclusion.get("option") == "e":
+                            inclusion_e1m = float(inclusion["e1m"])
+                            inclusion_e2m = float(inclusion["e2m"])
+                            comp_inclusion = complex(inclusion_e1m, inclusion_e2m)
+                            e_list_inclusions.append(comp_inclusion)
 
-                            volume = float(inclusion["volume"])
-                            volumes.append(volume)
+                        # File selected
+                        elif "file" in inclusion:
+                            file_ = inclusion.get("file")
+                            comp_inclusion = process_file(file_, initial_parameters, answer, steps)
+                            # Agregar la parte de listas que menciona Johanna
+                            comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
+                            e_list_inclusions.append(comp_inclusion)
 
-                        method = EfectiveMediumTheories(
-                            epsilon_host_mg=comp,
-                            volume_fractions_mg=volumes,
-                            epsilon_inclusions_mg=e_list_inclusions,
-                        )
-                        method_result = method.get_maxwell_garnett()
-                        refractive_indexes.append(method_result)
+                        # Refractive index selected
+                        else:
+                            inclusion_nm = float(inclusion["nm"])
+                            inclusion_km = float(inclusion["km"])
+                            comp_inclusion = get_dielectric_funtion_from_nk(
+                                inclusion_nm, inclusion_km
+                            )
+                            e_list_inclusions.append(comp_inclusion)
+
+                        volume = float(inclusion["volume"])
+                        volumes.append(volume)
+
+                    method = EfectiveMediumTheories(
+                        epsilon_host_mg=comp,
+                        volume_fractions_mg=volumes,
+                        epsilon_inclusions_mg=e_list_inclusions,
+                    )
+                    method_result = method.get_maxwell_garnett()
+                
+                # EFFECTIVE MEDIUM THEORIES: LORENTZ
+                if option == "lorentz":
                     
-                    # EFFECTIVE MEDIUM THEORIES: LORENTZ
-                    if option == "lorentz":
-                        # Dielectric
+                    # File selected for em
+                    if 'em' in material:
+                        em = material.get('em')
+                        file_ = em.get('file')
+                        comp = process_file(file_, initial_parameters, answer, steps)
+                        comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
+                    
+                    # Manual dielectric function selected for em
+                    if 'e-em' in material:
                         eem = material.get('e-em')
                         e1m = eem.get('e1m')
                         e2m = eem.get('e2m')
+                        comp = complex(float(e1m), float(e2m))
+                        
+                    # Manual refractive index selected for em
+                    if 'nk-em' in material:
+                        eem = material.get('nk-em')
                         nm = eem.get('nm')
                         km = eem.get('km')
+                        comp = get_dielectric_funtion_from_nk(float(nm), float(km))
+                            
+                    # File selected for ei
+                    if 'ei' in material:
+                        ei = material.get('ei')
+                        volume = float(material.get('volume'))
+                        file_ = ei.get('file')
+                        comp_inclusion = process_file(file_, initial_parameters, answer, steps)
+                        comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
                         
+                    # Manual selected for ei
+                    if 'e-ei' in material:
                         eei = material.get('e-ei')
                         e1i = eei.get('e1i')
                         e2i = eei.get('e2i')
+                        volume = float(eei.get('volume'))
+                        comp_inclusion = complex(float(e1i), float(e2i))
+
+                            
+                    if 'nk-ei' in material:
+                        eei = material.get('nk-ei')
                         ni = eei.get('ni')
                         ki = eei.get('ki')
                         volume = float(eei.get('volume'))
+                        comp_inclusion = get_dielectric_funtion_from_nk(float(ni), float(ki))
                         
-                        if e1m or e2m:
-                            comp = complex(float(e1m), float(e2m))
-                        elif nm or km:
-                            comp = get_dielectric_funtion_from_nk(float(nm), float(km))
-                            
-                        
-                        if e1i or e2i:
-                            comp_inclusion = complex(float(e1i), float(e2i))
-                        elif ni or ki:
-                            comp_inclusion = get_dielectric_funtion_from_nk(float(ni), float(ki))
-                            
-                        method = EfectiveMediumTheories(
-                            epsilon_host_ll=comp, 
-                            volume_fractions_ll=volume,
-                            epsilon_inclusion_ll=comp_inclusion,
-                        )
-                        method_result = method.get_lorentz_lorenz()
-                        refractive_indexes.append(method_result)
-                         
-            # Reading an InMemoryFile
-            else:
-                # Get extension
-                file_type = material.content_type.split("/")[1]
-
-                # Read file
-                decoded_file = material.read().decode("utf-8").splitlines()
-
-                # Set initial parameters
-                w_i = (
-                    initial_parameters.get("waveLength")
-                    if answer == "angular"
-                    else initial_parameters.get("initialWaveLength")
-                )
-                w_f = (
-                    w_i
-                    if answer == "angular"
-                    else initial_parameters.get("finalWaveLength")
-                )
-
-                # Get list of values for wl, n and k
-                wl_list, n_list, k_list = get_values_from_file(decoded_file, file_type)
-
-                # Calculate interpolation
-                result = interpolation(
-                    (wl_list, n_list, k_list), w_i, w_f, steps, respuesta=answer
-                )
-                if 'maxwell' in material.name:
-                    comp = get_dielectric_funtion_from_nk(result.real, result.imag)
                     method = EfectiveMediumTheories(
-                        epsilon_host_mg=comp,
+                        epsilon_host_ll=comp, 
+                        volume_fractions_ll=volume,
+                        epsilon_inclusion_ll=comp_inclusion,
                     )
-                    result = method.get_maxwell_garnett()
+                    method_result = method.get_lorentz_lorenz()
                     
-                print("INTERPOLACION---------------------", result)
+                # EFFECTIVE MEDIUM THEORIES: BRUGGEMAN
+                if option == "bruggeman":
+                    
+                    e_list_components = []
+                    volumes = []
+                    
+                    for component_name in material.keys():
+                        if component_name == 'option':
+                            continue
+
+                        component = material[component_name]
+                        
+                        # Dielectric function
+                        if component.option == 'e':
+                            e1i = float(component.get('e1i'))
+                            e2i = float(component.get('e2i'))
+                            comp = complex(float(e1i), float(e2i))
+                        
+                        # Refractive index
+                        if component.option == 'nk':
+                            ni = float(component.get('ni'))
+                            ki = float(component.get('ki'))
+                            comp = get_dielectric_funtion_from_nk(float(ni), float(ki))
+                        
+                        # File
+                        else:
+                            file_ = em.get('file')
+                            comp = process_file(file_, initial_parameters, answer, steps)
+                            comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
+                            
+                        e_list_components.append(comp)
+                        volume = component.get('volume')
+                        volumes.append(volume)
+                        
+                        method = EfectiveMediumTheories(
+                            volume_fractions_br=volumes,
+                            epsilon_components_br=e_list_components
+                        )
+                        method_result = method.get_bruggeman()
+                         
+                # Reading an InMemoryFile
+                if option == 'upload-file':
+                    # Set material as the uploaded file
+                    material = material.get('file')
+
+                    # Get interpolation result from file
+                    method_result = process_file(material, initial_parameters, answer, steps)
+                    
+                    
+                # Add refractive index to the corresponding material
+                refractive_indexes_by_material[material_name] = str(method_result)
+                
                 # Add n,k to the refractive indexes list
                 if answer == "angular":
-                    refractive_indexes.append(result)
+                    refractive_indexes.append(method_result)
                 else:
-                    refractive_indexes += result
+                    if isinstance(method_result, list):
+                        refractive_indexes.append(method_result)
+                    else:
+                        refractive_indexes += [method_result]
 
+        print('refractive indexes', refractive_indexes)
+        print('INDEXES BY MATERIAL', refractive_indexes_by_material)
+        
         # Get values for 'x' axis
         x_range = get_range_list(initial_parameter, final_parameter, steps)
-        print(x_range)
 
         # Initialize final §§c
         reflectances = []
         transmittances = []
         absortances = []
-
+        #import ipdb; ipdb.set_trace()
         # Calculate 'y' axis values using Transfer Matrix Method
         if answer == "angular":
             for x in x_range:
@@ -291,16 +359,52 @@ class CalculateDataView(APIView):
 
                 absortance = method.get_absortance()
                 absortances.append(absortance)
+        else:
+            for index in range(len(refractive_indexes[0])):
+                current_indexes_vector = get_current_vector(refractive_indexes, index)
+                method = TransferMatrixMethod(
+                    theta=fixed_parameter,
+                    l=x_range[index],
+                    n=current_indexes_vector,
+                    thicknesses=thicknesses,
+                    polarization=polarization.upper(),
+                )
+                reflectance = method.get_reflectance()
+                reflectances.append(reflectance)
 
+                transmittance = method.get_transmittance()
+                transmittances.append(transmittance)
+
+                absortance = method.get_absortance()
+                absortances.append(absortance)
+
+        
         # Format data to be just real numbers of float type with 2 decimal places
-        graph_data = {
+        data = {
             "reflectance": format_graph_data(reflectances),
             "transmittance": format_graph_data(transmittances),
-            "absortances": format_graph_data(absortances),
+            "absortance": format_graph_data(absortances),
             "x_range": format_graph_data(x_range),
+            "refractive_indexes_by_material": refractive_indexes_by_material,
         }
-        print(data)
         # Return a response with the graphics data and a confirmation to the browser about
         # the correct result of the POST request
-        print(graph_data)
-        return Response(graph_data, status=status.HTTP_200_OK)
+        print(data)
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class DownloadDataView(APIView):
+    """
+    View to receive POST data to create the file
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        source = request.data.get('source')
+        data = request.data.get('data')
+        graph_type = request.data.get('type')
+        response = HttpResponse(content_type="text/csv")
+        response = create_file(response, source, data, graph_type=graph_type)
+        return response
+        
+        

@@ -1,6 +1,9 @@
 from mpmath import sqrt
 import csv
+from app.api.interpolacion import interpolation
 import json
+import io
+import xlsxwriter
 
 def get_nk(d):
     """
@@ -101,29 +104,43 @@ def get_values_from_file(file_, file_type):
             # Skip empty line
             if not len(line):
                 continue
-
-            # Getting two possible values from the row
-            current_wl = line[0]
-            current_value = line[1]
-            try:
-                # Try to convert the numbers to float
-                current_wl = float(current_wl)
-                current_value = float(current_value)
-            except ValueError:
-                # The current row does not contain number,
-                # it has a new title where the k values start
-                if current_value == "k":
-                    current_parameter = "k"
+            
+            # Files with three columns (w,n,k)
+            if isinstance(line, list) and len(line) == 1:
+                line = line[0].strip()
+                current_wl, current_n, current_k = line.split(' ')
+                
+                try:
+                    wl_list.append(float(current_wl))
+                    n_list.append(float(current_n))
+                    k_list.append(float(current_k))
+                # skip the title
+                except ValueError:
+                    continue
             else:
-                # As wl is repeated we are going to append values
-                # just when they don't exist in the current list
-                if current_wl not in wl_list:
-                    wl_list.append(current_wl)
+                # Files with two columns and k appears at the middle of the file
+                # Getting two possible values from the row
+                current_wl = line[0]
+                current_value = line[1]
+                try:
+                    # Try to convert the numbers to float
+                    current_wl = float(current_wl)
+                    current_value = float(current_value)
+                except ValueError:
+                    # The current row does not contain number,
+                    # it has a new title where the k values start
+                    if current_value == "k":
+                        current_parameter = "k"
+                else:
+                    # As wl is repeated we are going to append values
+                    # just when they don't exist in the current list
+                    if current_wl not in wl_list:
+                        wl_list.append(current_wl)
 
-                # Check the current parameter to add it to the corresponding list
-                n_list.append(
-                    current_value
-                ) if current_parameter == "n" else k_list.append(current_value)
+                    # Check the current parameter to add it to the corresponding list
+                    n_list.append(
+                        current_value
+                    ) if current_parameter == "n" else k_list.append(current_value)
 
     if file_type == "x-yaml":
         reading_data = False
@@ -195,7 +212,11 @@ def order_materials(materials):
     return ordered_materials
 
 def group_materials(materials):
-    
+    """
+    Creates a bid dictionary with the nested data for 
+    each material, adding inclusions, components and files
+    under one single key, the name of the material
+    """
     grouped_materials = {}
     
     for material in materials:
@@ -269,3 +290,72 @@ def group_materials(materials):
                 grouped_materials[material_name]['option'] = method
     
     return grouped_materials
+
+
+def process_file(file_, initial_parameters, answer, steps):
+    # Get extension
+    file_type = file_.content_type.split("/")[1]
+
+    # Read file
+    decoded_file = file_.read().decode("utf-8").splitlines()
+
+    # Set initial parameters
+    w_i = (
+        initial_parameters.get("waveLength")
+        if answer == "angular"
+        else initial_parameters.get("initialWaveLength")
+    )
+    w_f = (
+        w_i
+        if answer == "angular"
+        else initial_parameters.get("finalWaveLength")
+    )
+
+    # Get list of values for wl, n and k
+    wl_list, n_list, k_list = get_values_from_file(decoded_file, file_type)
+
+    # Calculate interpolation
+    result = interpolation(
+        (wl_list, n_list, k_list), w_i, w_f, steps, respuesta=answer
+    )
+    
+    return result
+
+def create_file(response, data_source, data, graph_type=None):
+    writer = csv.writer(response)
+    if data_source == 'table':
+        # Headers
+        writer.writerow(
+            ['Material','Refractive Index',]
+        )
+        # Actual data
+        for material_name in data:
+            writer.writerow(
+            [
+                material_name,
+                data[material_name],
+            ]
+        )
+    else:
+        # Headers
+        writer.writerow(
+            ['Wave Length', graph_type.capitalize(),]
+        )
+        x = data.get('x')
+        y = data.get('y')
+        
+        # Actual data
+        for index in range(len(x)):
+            writer.writerow(
+            [
+                float(x[index]),
+                float(y[index]),
+            ]
+        )
+    filename = f"TransferMatrixMethod_{data_source}.csv"
+    response["Content-Disposition"] = "attachment; filename=%s" % filename
+    return response
+
+def get_current_vector(refractive_indexes, position):
+    return [refractive_indexes[material][position] for material in range(len(refractive_indexes))]
+    

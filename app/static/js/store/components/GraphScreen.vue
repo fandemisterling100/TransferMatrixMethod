@@ -2,23 +2,36 @@
   <div class="main-container container">
     <!-- Titles for the third screen where grpahics are being showed -->
     <h2 class="w-100 text-left calculations-title">Calculations</h2>
-    <h4 class="w-50 mt-3 text-center graphics-title">Graphics</h4>
     <!-- Vue component to render grpahic as a line chart 
     all the parameters inside are called from 'props' and
     'data' following the documentation provided by the
     dependency https://vue-chartjs.org/guide/#creating-your-first-chart-->
-    <LineChartGenerator
-      :chart-options="chartOptions"
-      :chart-data="chartData"
-      :chart-id="chartId"
-      :dataset-id-key="datasetIdKey"
-      :plugins="plugins"
-      :css-classes="cssClasses"
-      :styles="styles"
-      :width="width"
-      :height="height"
-      class="my-4"
-    />
+    <div class="d-flex-justify-content-center align-items-center row w-100">
+      <LineChartGenerator
+        :chart-options="chartOptions"
+        :chart-data="chartData"
+        :chart-id="chartId"
+        :dataset-id-key="datasetIdKey"
+        :plugins="plugins"
+        :css-classes="cssClasses"
+        :styles="styles"
+        :width="width"
+        :height="height"
+        class="my-4 col-8"
+      />
+      <div class="d-flex flex-column align-items-center justify-content-center col-4">
+        <b-table 
+          caption-top
+          responsive
+          hover 
+          :items="items" 
+          :fields="fields"
+          head-variant="light"
+          sticky-header="500px"
+          ></b-table>
+        <b-button class="mt-3" variant="info" @click="downloadTableData">Download Table</b-button>
+      </div>
+    </div>
     <!-- Container for the dropdown and 'download button' -->
     <div class="d-flex justify-content-center align-items-center mt-3">
       <!-- Group of input option in the broswer, the groups contain a label for the input
@@ -49,7 +62,7 @@
       <!-- Button to download the graphic data, once it is clicked the method downloadData
       is called and executed from the methods() section below. Class and variant only
       gives built-in bootstrap styles to the button -->
-      <b-button class="ml-3" variant="success" @click="downloadData">Download</b-button>
+      <b-button class="ml-3" variant="success" @click="downloadGraphData">Download</b-button>
     </div>
   </div>
 </template>
@@ -145,18 +158,64 @@ export default {
         responsive: true,
         maintainAspectRatio: false
       },
+      fields: [
+        {
+          key: 'material',
+          sortable: true,
+          isRowHeader: true,
+        },
+        {
+          key: 'value',
+          sortable: true,
+          label: 'Refractive Index',
+        },
+      ],
     }
   },
   computed: {
     ...mapState({
       result: state => state.transfer.result,
     }),
+    items() {
+      let items = []
+      if (this.result && this.result.refractive_indexes_by_material) {
+        Object.keys(this.result.refractive_indexes_by_material).forEach(material => {
+          items.push(
+            { 
+              isActive: true, 
+              material: material.charAt(0).toUpperCase() + material.slice(1),
+              value:  this.result.refractive_indexes_by_material[material]
+            }
+          )
+        });
+      }
+      return items
+    }
   },
   methods: {
     ...mapActions({
+      downloadData: "transfer/downloadData",
     }),
-    downloadData() {
-      console.log("download")
+    downloadGraphData() {
+      if (this.download) {
+        let graphData = {
+          x: this.result.x_range,
+          y: this.result[this.download],
+        }
+        const data = {
+          source: 'graph',
+          data: graphData,
+          type: this.download,
+        } 
+        this.downloadData(data)
+      }
+    },
+    downloadTableData() {
+      const data = {
+        source: 'table',
+        data: this.result.refractive_indexes_by_material,
+      } 
+      this.downloadData(data)
     },
     formatChartData() {
       // Format data as 
@@ -176,7 +235,7 @@ export default {
       /* data.datasets.push({
         label: 'Absortance',
         backgroundColor: '#A4C098',
-        data: this.result.absortances,
+        data: this.result.absortance,
         borderColor: '#A4C098',
         fill: false
       })

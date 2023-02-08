@@ -15,18 +15,16 @@ class EfectiveMediumTheories(object):
         epsilon_host_ll=1+0j, 
         volume_fractions_ll=0,
         epsilon_inclusion_ll=1+0j,
+        volume_fractions_br=[],
+        epsilon_components_br=[]
         ):
-        self.epsilon_mg = (
-            1 + 0j
-        )  # effective dielectric function with Maxwell Garnett model
+
         self.epsilon_host_mg = (  # in case 'e' is selected
             epsilon_host_mg  # dielectric function of the host for Maxwell Garnett model
         )
         self.volume_fractions_mg = volume_fractions_mg  # volume fraction of the inclusion with Maxwell Garnett model
         self.epsilon_inclusions_mg = epsilon_inclusions_mg  # in case 'e' is selected in inclusions  # dielectric function of the inclusions for Maxwell Garnett model
-        self.epsilon_ll = (
-            1  # effective dielectric function with The Lorentz–Lorenz relation
-        )
+
         self.epsilon_host_ll = (
             epsilon_host_ll
         )  # dielectric function of the host for The Lorentz–Lorenz relation
@@ -36,10 +34,9 @@ class EfectiveMediumTheories(object):
         self.epsilon_inclusion_ll = (
             epsilon_inclusion_ll
         )  # dielectric function of the inclusions for The Lorentz–Lorenz relation
-        self.epsilon_br = 1 + 0j  # effective dielectric function with Bruggeman
-        self.volume_fractions_br = []  # volume fraction of the phases with Bruggeman
+        self.volume_fractions_br = volume_fractions_br  # volume fraction of the phases with Bruggeman
         self.epsilon_components_br = (
-            []
+            epsilon_components_br
         )  # dielectric function of the componets for Bruggeman
 
     def get_maxwell_garnett(self):
@@ -49,10 +46,10 @@ class EfectiveMediumTheories(object):
         *Receives a list of all parameters entered by the user
         * Return n and k
         """
-        self.epsilon_mg = smp.symbols("epsilon_mg")
+        epsilon_mg = smp.symbols("epsilon_mg")
         list = []
-        a = (self.epsilon_mg - self.epsilon_host_mg) / (
-            self.epsilon_mg + 2 * self.epsilon_host_mg
+        a = (epsilon_mg - self.epsilon_host_mg) / (
+            epsilon_mg + 2 * self.epsilon_host_mg
         )
 
         for i, j in zip(self.volume_fractions_mg, self.epsilon_inclusions_mg):
@@ -63,7 +60,7 @@ class EfectiveMediumTheories(object):
 
         suma = sum(list)
         e = a + suma
-        solution = smp.solve(e, self.epsilon_mg)
+        solution = smp.solve(e, epsilon_mg)
         # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:
@@ -83,13 +80,13 @@ class EfectiveMediumTheories(object):
         *Receives a list of all parameters entered by the user
         * Return n and k
         """
-        self.epsilon_ll = smp.symbols("epsilon_ll")
-        a = (self.epsilon_ll - 1) / (self.epsilon_ll + 2)
+        epsilon_ll = smp.symbols("epsilon_ll")
+        a = (epsilon_ll - 1) / (epsilon_ll + 2)
         b = (self.epsilon_inclusion_ll - 1) / (self.epsilon_inclusion_ll + 2)
         c = (self.epsilon_host_ll - 1) / (self.epsilon_host_ll - 2)
         d = 1 - self.volume_fractions_ll
         e = a - self.volume_fractions_ll * b - d * c
-        solution = smp.solve(e, self.epsilon_ll)
+        solution = smp.solve(e, epsilon_ll)
         # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:
@@ -110,17 +107,17 @@ class EfectiveMediumTheories(object):
         *Receives a list of all parameters entered by the user
         * Return n and k
         """
-        self.epsilon_br = smp.symbols("epsilon_mg")
+        epsilon_br = smp.symbols("epsilon_mg")
         list = []
 
         for i, j in zip(self.volume_fractions_br, self.epsilon_components_br):
-            a = j - self.epsilon_br
-            b = j + (2 * self.epsilon_br)
+            a = j - epsilon_br
+            b = j + (2 * epsilon_br)
             c = a / b
             d = i * c
             list.append(d)
         suma = sum(list)
-        solution = smp.solve(suma, self.epsilon_br)
+        solution = smp.solve(suma, epsilon_br)
         # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:

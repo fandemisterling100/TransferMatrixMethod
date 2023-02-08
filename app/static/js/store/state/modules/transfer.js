@@ -39,6 +39,24 @@ const actions = {
       console.log(error);
     })
   },
+  downloadData({ commit, state }, data) {
+    // Endpoint to ask for files
+    let url = `/api/v1/download-data/`
+    return Api.post(url, data).then((response) => {
+      const outputFilename = response.headers["content-disposition"].split('filename=')[1]
+
+        // If you want to download file automatically using link attribute.
+        const url = URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', outputFilename);
+        document.body.appendChild(link);
+        link.click();
+      return response.data
+    }).catch(error => {
+      console.log(error);
+    })
+  },
 }
 
 // mutations
