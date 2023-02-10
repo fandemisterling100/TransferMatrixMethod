@@ -4,6 +4,7 @@ from app.api.interpolacion import interpolation
 import json
 import io
 import xlsxwriter
+import ast
 
 def get_nk(d):
     """
@@ -64,7 +65,7 @@ def format_graph_data(data):
     Returns just the real part of every value from
     the data
     """
-    return [round(float(value.real), 2) for value in data]
+    return [round(float(value.real), 4) for value in data]
 
 
 def get_values_from_file(file_, file_type):
@@ -166,8 +167,7 @@ def get_values_from_file(file_, file_type):
 
     if len(k_list) == 0:
         k_list = [0] * len(wl_list)
-    print(wl_list, n_list, k_list)
-    print(len(wl_list), len(n_list), len(k_list))
+
     return wl_list, n_list, k_list
 
 
@@ -208,7 +208,6 @@ def order_materials(materials):
     if host:
         ordered_materials.append({'host': host})
 
-    print(ordered_materials)
     return ordered_materials
 
 def group_materials(materials):
@@ -321,21 +320,46 @@ def process_file(file_, initial_parameters, answer, steps):
     
     return result
 
+def format_number(number):
+    if isinstance(number, float) or isinstance(number, str) or isinstance(number, int):
+        number = round(number, 4)
+    if isinstance(number, complex):
+        number = complex(round(number.real, 4), round(number.imag, 4))
+    return number
+
 def create_file(response, data_source, data, graph_type=None):
     writer = csv.writer(response)
     if data_source == 'table':
-        # Headers
+        headers = []
+        headers.append('Wave Length')
+        for material_name in data:
+            # Headers
+            if material_name != 'x':
+                headers.append(material_name.capitalize())
         writer.writerow(
-            ['Material','Refractive Index',]
+            headers
         )
         # Actual data
-        for material_name in data:
-            writer.writerow(
-            [
-                material_name,
-                data[material_name],
-            ]
-        )
+        x = data.get('x')
+        if isinstance(x, float) or isinstance(x, int): x = [x]
+
+        for index in range(len(x)):
+            current_row = []
+            # Add wavelength
+            x_value = format_number(x[index])
+            current_row.append(x_value)
+            
+            # Add material refractive indexes
+            for material_name in data:
+                if material_name != 'x':
+                    material_data = ast.literal_eval(data[material_name])
+                    value = material_data[index] if isinstance(material_data, list) else material_data
+                    value = format_number(value)
+                    current_row.append(value)
+        
+            # Write row on csv file
+            writer.writerow(current_row)
+            
     else:
         # Headers
         writer.writerow(
@@ -346,10 +370,12 @@ def create_file(response, data_source, data, graph_type=None):
         
         # Actual data
         for index in range(len(x)):
+            x_value = f"{float(x[index]):.4n}"
+            y_value = f"{float(y[index]):.4n}"
             writer.writerow(
             [
-                float(x[index]),
-                float(y[index]),
+                x_value,
+                y_value,
             ]
         )
     filename = f"TransferMatrixMethod_{data_source}.csv"
@@ -358,4 +384,3 @@ def create_file(response, data_source, data, graph_type=None):
 
 def get_current_vector(refractive_indexes, position):
     return [refractive_indexes[material][position] for material in range(len(refractive_indexes))]
-    

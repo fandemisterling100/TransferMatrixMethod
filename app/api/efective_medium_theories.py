@@ -61,7 +61,6 @@ class EfectiveMediumTheories(object):
         suma = sum(list)
         e = a + suma
         solution = smp.solve(e, epsilon_mg)
-        # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:
             z = complex(i)
@@ -87,7 +86,6 @@ class EfectiveMediumTheories(object):
         d = 1 - self.volume_fractions_ll
         e = a - self.volume_fractions_ll * b - d * c
         solution = smp.solve(e, epsilon_ll)
-        # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:
             z = complex(i)
@@ -95,7 +93,6 @@ class EfectiveMediumTheories(object):
         if len(effective_dielectric_functions) > 1:
             if z.real >= 0 and z.imag >= 0:
                 effective_dielectric_functions = z
-        print("funcion dielectrica", effective_dielectric_functions)
         epsilon = effective_dielectric_functions[0]
         n_k = get_nk_from_dielectric_fuction(epsilon.real, epsilon.imag)
         return n_k
@@ -107,10 +104,12 @@ class EfectiveMediumTheories(object):
         *Receives a list of all parameters entered by the user
         * Return n and k
         """
-        epsilon_br = smp.symbols("epsilon_mg")
+        epsilon_br = smp.symbols("epsilon_br")
         list = []
 
         for i, j in zip(self.volume_fractions_br, self.epsilon_components_br):
+            if isinstance(i, str):
+                i = float(i)
             a = j - epsilon_br
             b = j + (2 * epsilon_br)
             c = a / b
@@ -118,7 +117,6 @@ class EfectiveMediumTheories(object):
             list.append(d)
         suma = sum(list)
         solution = smp.solve(suma, epsilon_br)
-        # print("este es el print", solution)
         effective_dielectric_functions = []
         for i in solution:
             z = complex(i)
@@ -126,7 +124,6 @@ class EfectiveMediumTheories(object):
         if len(effective_dielectric_functions) > 1:
             if z.real >= 0 and z.imag >= 0:
                 effective_dielectric_functions = z
-        print("funcion dielectrica", effective_dielectric_functions)
 
         n_k = get_nk_from_dielectric_fuction(
             effective_dielectric_functions.real, effective_dielectric_functions.imag

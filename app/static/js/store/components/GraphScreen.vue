@@ -20,7 +20,12 @@
         class="my-4 col-8"
       />
       <div class="d-flex flex-column align-items-center justify-content-center col-4">
+        <p v-if="type === 'angular'" class="m-0 p-0 mb-3">
+          <span class="font-weight-bold mr-3">Wave Length:</span>
+          {{ result.x_table }}
+        </p>
         <b-table 
+          v-if="type === 'angular'"
           caption-top
           responsive
           hover 
@@ -28,7 +33,31 @@
           :fields="fields"
           head-variant="light"
           sticky-header="500px"
-          ></b-table>
+        ></b-table>
+        <div v-else class="spectral-table-container">
+          <table class="table table-fit" >
+            <thead class="thead-light">
+              <tr>
+                <th scope="col">
+                  Wave Length
+                </th>
+                <th scope="col" v-for="(material, index) in Object.keys(result.refractive_indexes_by_material)" :key="index">
+                  {{material.charAt(0).toUpperCase() + material.slice(1)}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="index in Array.from({length: result.x_range.length}, (v, i) => i)" :key="index">
+                <td >
+                  {{result.x_range[index]}}
+                </td>
+                <td v-for="(material, indexM) in Object.keys(result.refractive_indexes_by_material)" :key="indexM">
+                  {{result.refractive_indexes_by_material[material].replaceAll('[', '').replaceAll(']', '').split(',')[index]}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
         <b-button class="mt-3" variant="info" @click="downloadTableData">Download Table</b-button>
       </div>
     </div>
@@ -156,8 +185,15 @@ export default {
       },
       chartOptions: {
         responsive: true,
-        maintainAspectRatio: false
-      },
+        maintainAspectRatio: false,
+        tooltips: {
+            callbacks: {
+              label: function (tooltipItem, data) {
+                return Number(tooltipItem.yLabel).toFixed(4);
+              }
+            }
+          },
+        },
       fields: [
         {
           key: 'material',
@@ -175,19 +211,22 @@ export default {
   computed: {
     ...mapState({
       result: state => state.transfer.result,
+      type: state => state.transfer.type,
     }),
     items() {
       let items = []
       if (this.result && this.result.refractive_indexes_by_material) {
-        Object.keys(this.result.refractive_indexes_by_material).forEach(material => {
-          items.push(
-            { 
-              isActive: true, 
-              material: material.charAt(0).toUpperCase() + material.slice(1),
-              value:  this.result.refractive_indexes_by_material[material]
-            }
-          )
-        });
+        if (this.type === 'angular') {
+          Object.keys(this.result.refractive_indexes_by_material).forEach(material => {
+            items.push(
+              { 
+                isActive: true, 
+                material: material.charAt(0).toUpperCase() + material.slice(1),
+                value:  this.result.refractive_indexes_by_material[material]
+              }
+            )
+          });
+        } 
       }
       return items
     }
@@ -213,7 +252,10 @@ export default {
     downloadTableData() {
       const data = {
         source: 'table',
-        data: this.result.refractive_indexes_by_material,
+        data: {
+          ...this.result.refractive_indexes_by_material,
+          x: this.type === 'angular' ? this.result.x_table : this.result.x_range,
+        },
       } 
       this.downloadData(data)
     },

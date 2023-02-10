@@ -38,7 +38,7 @@
   flex-wrap: wrap;
 
   input {
-    width: 70px !important;
+    width: 110px !important;
   }
   label {
     margin-right: 1rem !important;
@@ -125,7 +125,7 @@
 }
 .thickness-input{
   input {
-    width: 70px;
+    width: 110px;
     margin-left: 15px;
   }
 }
@@ -177,4 +177,28 @@
 }
 .error-message {
   font-size: 0.6rem;
+}
+.spectral-table-container {
+  max-height: 400px;
+  overflow-y: scroll;
+  width: 100%;
+  table {
+    font-size: 0.8rem;
+  }
+  th {
+    text-align: center;
+  }
+  table.table-fit {
+    width: auto !important;
+    table-layout: auto !important;
+  }
+  table.table-fit thead th, table.table-fit tfoot th {
+      width: auto !important;
+  }
+  table.table-fit tbody td, table.table-fit tfoot td {
+      width: auto !important;
+  }
+}
+.table-responsive {
+  font-size: 0.8rem !important;
 }

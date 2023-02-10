@@ -15,6 +15,7 @@ from app.api.utils import (
     process_file,
     create_file,
     get_current_vector,
+    format_number,
 )
 from app.api.transfer_matrix_method import TransferMatrixMethod
 from app.api.efective_medium_theories import EfectiveMediumTheories
@@ -191,8 +192,10 @@ class CalculateDataView(APIView):
                         elif "file" in inclusion:
                             file_ = inclusion.get("file")
                             comp_inclusion = process_file(file_, initial_parameters, answer, steps)
-                            # Agregar la parte de listas que menciona Johanna
-                            comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
+                            if isinstance(comp_inclusion, list):
+                                comp_inclusion = [get_dielectric_funtion_from_nk(val.real, val.imag) for val in comp_inclusion]
+                            else:
+                                comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
                             e_list_inclusions.append(comp_inclusion)
 
                         # Refractive index selected
@@ -207,12 +210,24 @@ class CalculateDataView(APIView):
                         volume = float(inclusion["volume"])
                         volumes.append(volume)
 
-                    method = EfectiveMediumTheories(
-                        epsilon_host_mg=comp,
-                        volume_fractions_mg=volumes,
-                        epsilon_inclusions_mg=e_list_inclusions,
-                    )
-                    method_result = method.get_maxwell_garnett()
+                    if answer == 'angular':
+                        method = EfectiveMediumTheories(
+                            epsilon_host_mg=comp,
+                            volume_fractions_mg=volumes,
+                            epsilon_inclusions_mg=e_list_inclusions,
+                        )
+                        method_result = method.get_maxwell_garnett()
+                    else:
+                        method_result = []
+                        for index in range(len(e_list_inclusions[0])):
+                            current_e_inclusions_vector = get_current_vector(e_list_inclusions, index)
+                            method = EfectiveMediumTheories(
+                                epsilon_host_mg=comp[index],
+                                volume_fractions_mg=volumes,
+                                epsilon_inclusions_mg=current_e_inclusions_vector,
+                            )
+                            method_current_result = method.get_maxwell_garnett()
+                            method_result.append(method_current_result)
                 
                 # EFFECTIVE MEDIUM THEORIES: LORENTZ
                 if option == "lorentz":
@@ -222,7 +237,10 @@ class CalculateDataView(APIView):
                         em = material.get('em')
                         file_ = em.get('file')
                         comp = process_file(file_, initial_parameters, answer, steps)
-                        comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
+                        if isinstance(comp, list):
+                            comp = [get_dielectric_funtion_from_nk(val.real, val.imag) for val in comp]
+                        else:
+                            comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
                     
                     # Manual dielectric function selected for em
                     if 'e-em' in material:
@@ -244,7 +262,10 @@ class CalculateDataView(APIView):
                         volume = float(material.get('volume'))
                         file_ = ei.get('file')
                         comp_inclusion = process_file(file_, initial_parameters, answer, steps)
-                        comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
+                        if isinstance(comp_inclusion, list):
+                            comp_inclusion = [get_dielectric_funtion_from_nk(val.real, val.imag) for val in comp_inclusion]
+                        else:
+                            comp_inclusion = get_dielectric_funtion_from_nk(comp_inclusion.real, comp_inclusion.imag)
                         
                     # Manual selected for ei
                     if 'e-ei' in material:
@@ -261,13 +282,24 @@ class CalculateDataView(APIView):
                         ki = eei.get('ki')
                         volume = float(eei.get('volume'))
                         comp_inclusion = get_dielectric_funtion_from_nk(float(ni), float(ki))
-                        
-                    method = EfectiveMediumTheories(
-                        epsilon_host_ll=comp, 
-                        volume_fractions_ll=volume,
-                        epsilon_inclusion_ll=comp_inclusion,
-                    )
-                    method_result = method.get_lorentz_lorenz()
+                    
+                    if answer == 'angular':
+                        method = EfectiveMediumTheories(
+                            epsilon_host_ll=comp, 
+                            volume_fractions_ll=volume,
+                            epsilon_inclusion_ll=comp_inclusion,
+                        )
+                        method_result = method.get_lorentz_lorenz()
+                    else:
+                        method_result = []
+                        for index in range(len(comp_inclusion)):
+                            method = EfectiveMediumTheories(
+                                epsilon_host_ll=comp[index], 
+                                volume_fractions_ll=volume,
+                                epsilon_inclusion_ll=comp_inclusion[index],
+                            )
+                            method_current_result = method.get_lorentz_lorenz()
+                            method_result.append(method_current_result)
                     
                 # EFFECTIVE MEDIUM THEORIES: BRUGGEMAN
                 if option == "bruggeman":
@@ -280,35 +312,50 @@ class CalculateDataView(APIView):
                             continue
 
                         component = material[component_name]
-                        
+
                         # Dielectric function
-                        if component.option == 'e':
+                        if component.get('option') == 'e':
                             e1i = float(component.get('e1i'))
                             e2i = float(component.get('e2i'))
                             comp = complex(float(e1i), float(e2i))
                         
                         # Refractive index
-                        if component.option == 'nk':
+                        elif component.get('option') == 'nk':
                             ni = float(component.get('ni'))
                             ki = float(component.get('ki'))
                             comp = get_dielectric_funtion_from_nk(float(ni), float(ki))
                         
                         # File
                         else:
-                            file_ = em.get('file')
+                            file_ = component.get('file')
                             comp = process_file(file_, initial_parameters, answer, steps)
-                            comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
+                            if isinstance(comp, list):
+                                comp = [get_dielectric_funtion_from_nk(val.real, val.imag) for val in comp]
+                            else:
+                                comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
                             
                         e_list_components.append(comp)
                         volume = component.get('volume')
                         volumes.append(volume)
                         
+                    if answer == 'angular':
                         method = EfectiveMediumTheories(
                             volume_fractions_br=volumes,
                             epsilon_components_br=e_list_components
                         )
                         method_result = method.get_bruggeman()
-                         
+                        
+                    else:
+                        method_result = []
+                        for index in range(len(e_list_components[0])):
+                            current_e_components_vector = get_current_vector(e_list_components, index)
+                            method = EfectiveMediumTheories(
+                                volume_fractions_br=volumes,
+                                epsilon_components_br=current_e_components_vector
+                            )
+                            method_current_result = method.get_bruggeman()
+                            method_result.append(method_current_result)
+                            
                 # Reading an InMemoryFile
                 if option == 'upload-file':
                     # Set material as the uploaded file
@@ -316,22 +363,29 @@ class CalculateDataView(APIView):
 
                     # Get interpolation result from file
                     method_result = process_file(material, initial_parameters, answer, steps)
-                    
-                    
+
+                # Format data table to 4 decimals
+                material_index = method_result
                 # Add refractive index to the corresponding material
-                refractive_indexes_by_material[material_name] = str(method_result)
+                if isinstance(material_index, list):
+                    material_index = [format_number(number) for number in material_index]
+                else:
+                    material_index = format_number(material_index)
+                
+                refractive_indexes_by_material[material_name] = str(material_index)
                 
                 # Add n,k to the refractive indexes list
+                # Angular method always adds a number
+                # it is just a list of numbers
                 if answer == "angular":
                     refractive_indexes.append(method_result)
                 else:
+                    # Spectral methods always add a list
+                    # it creates a list of lists
                     if isinstance(method_result, list):
                         refractive_indexes.append(method_result)
                     else:
                         refractive_indexes += [method_result]
-
-        print('refractive indexes', refractive_indexes)
-        print('INDEXES BY MATERIAL', refractive_indexes_by_material)
         
         # Get values for 'x' axis
         x_range = get_range_list(initial_parameter, final_parameter, steps)
@@ -386,10 +440,10 @@ class CalculateDataView(APIView):
             "absortance": format_graph_data(absortances),
             "x_range": format_graph_data(x_range),
             "refractive_indexes_by_material": refractive_indexes_by_material,
+            "x_table": fixed_parameter,
         }
         # Return a response with the graphics data and a confirmation to the browser about
         # the correct result of the POST request
-        print(data)
         return Response(data, status=status.HTTP_200_OK)
 
 
