@@ -156,13 +156,9 @@ For support, email johannalg97@gmail.com
 
 
 ## Screenshots
-- Welcome Screen
 [![HG3LVQj.md.png](https://iili.io/HG3LVQj.md.png)](https://freeimage.host/i/HG3LVQj)
-- Materials and initial parameters Screen
 [![HG3QdaS.md.png](https://iili.io/HG3QdaS.md.png)](https://freeimage.host/i/HG3QdaS)
-- Graph Screen
 [![HG3LMhb.md.png](https://iili.io/HG3LMhb.md.png)](https://freeimage.host/i/HG3LMhb)
-- Experimental Data Screen
 [![HG3LhEQ.md.png](https://iili.io/HG3LhEQ.md.png)](https://freeimage.host/i/HG3LhEQ)
 
 ## Tech Stack
