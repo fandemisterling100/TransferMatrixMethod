@@ -10,7 +10,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 5%;
+    h3 {
+      background-color: aliceblue;
+      padding: 1rem 2rem;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      color: midnightblue;
+    }
 
     img {
       height: 100px;
@@ -20,22 +26,28 @@
   .introduction {
     display: flex;
     align-items: center;
-    background-color: aliceblue;
-    border-radius: 15px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
     padding: 2rem;
+    border: 3px solid aliceblue;
   }
   img {
-    height: 70px;
+    height: 110px;
     margin-left: 2rem;
   }
 }
 
 .initial-params {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   margin-top: 1.2rem;
   flex-wrap: wrap;
+
+  .form-group {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr !important;
+  }
 
   input {
     width: 110px !important;
@@ -56,25 +68,30 @@
 }
 
 .initial-params-container {
-  background-color: aliceblue;
-  padding: 1rem;
-  border-radius: 20px;
-  margin-top: 2rem;
+  padding: 1rem; 
   width: 50%;
   height: 50vh;
   overflow-y: hidden;
+  border-right: 3px solid aliceblue;
 }
 .methods-main-container{
   margin-top: 3rem;
   h2 {
-    margin-left: 3rem;
+    background-color: aliceblue;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    padding: 1rem 2rem;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+    margin-bottom: 0;
+    color: midnightblue;
   }
 }
 
 .method-container {
   img {
     height: 100px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.8rem;
     margin-top: 1rem;
     align-self: center;
   }
@@ -89,12 +106,10 @@
 }
 .layers-container {
   width: 50%;
-  background-color: aliceblue;
   height: 50vh;
   margin-left: 1rem;
   padding: 1.2rem;
   border-radius: 20px;
-  margin-top: 2rem;
   overflow-y: scroll;
   display: flex;
   justify-content: center;
@@ -139,7 +154,10 @@
 
 .middle-container {
   margin-left: 3vw;
-  margin-right: 3vw
+  margin-right: 3vw;
+  border: 3px solid aliceblue;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 .maxwell-file {
   label {
@@ -165,22 +183,25 @@
   margin-right: 1.5rem;
 }
 .graphics-title {
-  background-color: antiquewhite;
+  background-color: aliceblue;
   padding: 0.5rem;
   border-radius: 12px;
 }
 .calculations-title {
-  background-color: aliceblue;
-  padding: 0.4rem;
+  padding: 0.7rem;
   border-radius: 12px;
   padding-left: 1rem;
+  color: midnightblue;
 }
 .error-message {
   font-size: 0.6rem;
 }
 .spectral-table-container {
-  max-height: 400px;
-  overflow-y: scroll;
+  max-height: 250px !important;
+  overflow-y: scroll !important;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
   width: 100%;
   table {
     font-size: 0.8rem;
@@ -201,4 +222,40 @@
 }
 .table-responsive {
   font-size: 0.8rem !important;
+  max-height: 250px !important;
+  overflow-y: scroll !important;
+}
+.espectral-table-title {
+  background-color: aliceblue;
+  font-weight: 700;
+  padding: 0.7rem 2rem;
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+}
+.experimental-data-text {
+  font-size: 0.9rem;
+}
+.methods-titles {
+  margin-left: 3vw;
+  margin-right: 3vw;
+}
+.intro-img {
+  height: 200px !important;
+}
+.intro-text {
+  font-size: 1.19rem;
+}
+img.sellmeier {
+  height: 75px !important;
+}
+img.drude {
+  height: 155px !important;
+}
+img.lorenz {
+  height: 135px !important;
+}
+img.lorentz {
+  height: 65px !important;
 }

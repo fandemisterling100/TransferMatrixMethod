@@ -16,12 +16,15 @@ from app.api.utils import (
     create_file,
     get_current_vector,
     format_number,
+    get_reflectance_from_file,
+    chi_square,
 )
 from app.api.transfer_matrix_method import TransferMatrixMethod
 from app.api.efective_medium_theories import EfectiveMediumTheories
 from app.api.dispersion_models import DispersionModels
 import csv
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from app.api.serializers import TransferSerializer
 
@@ -39,6 +42,7 @@ class CalculateDataView(APIView):
     # SerializeR for initial parameters
     serializer_class = TransferSerializer
 
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         # Serialize initial parameters to read them as float and not as strings
         serializer = self.serializer_class(data=request.data)
@@ -71,7 +75,6 @@ class CalculateDataView(APIView):
             if answer == "angular"
             else initial_parameters.get("angle")
         )
-        number_of_materials = initial_parameters.get("materialsQuantity")
 
         # Initialize list to store n,k values
         refractive_indexes = []
@@ -100,7 +103,7 @@ class CalculateDataView(APIView):
 
                 # Add layer thickness to the vector
                 if "thickness" in material:
-                    thicknesses.append(float(material.get("thickness")))
+                    thicknesses.append(float(material.pop("thickness")))
 
                 # MANUAL OPTION
                 if option == "manual":
@@ -335,7 +338,7 @@ class CalculateDataView(APIView):
                                 comp = get_dielectric_funtion_from_nk(comp.real, comp.imag)
                             
                         e_list_components.append(comp)
-                        volume = component.get('volume')
+                        volume = float(component.get('volume'))
                         volumes.append(volume)
                         
                     if answer == 'angular':
@@ -348,6 +351,7 @@ class CalculateDataView(APIView):
                     else:
                         method_result = []
                         for index in range(len(e_list_components[0])):
+                            
                             current_e_components_vector = get_current_vector(e_list_components, index)
                             method = EfectiveMediumTheories(
                                 volume_fractions_br=volumes,
@@ -390,7 +394,7 @@ class CalculateDataView(APIView):
         # Get values for 'x' axis
         x_range = get_range_list(initial_parameter, final_parameter, steps)
 
-        # Initialize final §§c
+        # Initialize final
         reflectances = []
         transmittances = []
         absortances = []
@@ -456,9 +460,48 @@ class DownloadDataView(APIView):
     def post(self, request, *args, **kwargs):
         source = request.data.get('source')
         data = request.data.get('data')
+        answer = data.pop('answer') 
         graph_type = request.data.get('type')
         response = HttpResponse(content_type="text/csv")
-        response = create_file(response, source, data, graph_type=graph_type)
+        response = create_file(response, source, data, answer, graph_type=graph_type)
         return response
         
         
+class CompareExperimentalDataView(APIView):
+    """
+    View to receive POST with experimental data
+    to calculate Chi 
+    """
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        # Get data from POST
+        answer = request.data.get('answer')
+        theorical_reflectance = request.data.get('calculated_reflectance')
+        theorical_reflectance = theorical_reflectance.split(',')
+        theorical_reflectance = [float(value) for value in theorical_reflectance]
+        file_ = request.data.get('file')
+        initial_param = float(request.data.get('initial_param'))
+        final_param = float(request.data.get('final_param'))
+        steps = int(request.data.get('steps'))
+        
+        # Read file with experimental data
+        x_experimental, experimental_reflectance = get_reflectance_from_file(file_)
+        
+        # Calculate chi
+        chi, y_experimental = chi_square(
+            experimental_reflectance,
+            x_experimental,
+            theorical_reflectance,
+            initial_param,
+            final_param,
+            steps
+        )
+        
+        data = {
+            'experimental_reflectance': y_experimental,
+            'x_vector': x_experimental,
+            'chi': round(chi, 4),
+            'filename': file_.name,
+        }
+        return Response(data, status=status.HTTP_200_OK)

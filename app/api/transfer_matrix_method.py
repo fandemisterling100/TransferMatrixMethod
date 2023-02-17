@@ -30,8 +30,6 @@ class TransferMatrixMethod(object):
         """
         if not (self.l > 0 and self.l <= 20):
             raise ValueError(f"{self.l} l is not valid")
-        if not (self.theta >= 0 and self.theta < 90):
-            raise ValueError(f"{self.theta} theta is not in range 0 to 89")
 
         i = (2 * pi) / self.l
         setattr(self, "propagation_vector_i", i)
@@ -103,12 +101,12 @@ class TransferMatrixMethod(object):
                 b = self.propagation_vectors_x[i] + self.propagation_vectors_x[i + 1]
                 r = a / b
                 list_.append(r)
-
-        for i in range(0, len(self.n) - 1):
-            a = (self.n[i] ** 2) * self.propagation_vectors_x[i + 1]
-            b = (self.n[i + 1] ** 2) * self.propagation_vectors_x[i]
-            r = (a - b) / (a + b)
-            list_.append(r)
+        else:
+            for i in range(0, len(self.n) - 1):
+                a = (self.n[i] ** 2) * self.propagation_vectors_x[i + 1]
+                b = (self.n[i + 1] ** 2) * self.propagation_vectors_x[i]
+                r = (a - b) / (a + b)
+                list_.append(r)
         setattr(self, "reflection_coefficients", list_)
         return list_
 
@@ -127,12 +125,13 @@ class TransferMatrixMethod(object):
             for i in range(0, len(self.reflection_coefficients)):
                 tij = 1 + self.reflection_coefficients[i]
                 list_.append(tij)
-
-        for i in range(0, len(self.reflection_coefficients)):
-            a = self.n[i] / self.n[i + 1]
-            b = 1 + self.reflection_coefficients[i]
-            tij = a * b
-            list_.append(tij)
+        else:
+            for i in range(0, len(self.reflection_coefficients) - 1):
+                print(i)
+                a = self.n[i] / self.n[i + 1]
+                b = 1 + self.reflection_coefficients[i]
+                tij = a * b
+                list_.append(tij)
         setattr(self, "trasmission_coefficients", list_)
         return list_
 

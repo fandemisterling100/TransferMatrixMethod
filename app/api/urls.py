@@ -10,4 +10,5 @@ urlpatterns = [
     # going to process it.
     path("transfer-method/", views.CalculateDataView.as_view(), name="calculate"),
     path("download-data/", views.DownloadDataView.as_view(), name="download"),
+    path("calculate-chi/", views.CompareExperimentalDataView.as_view(), name="compare_experimental_data"),
 ]

@@ -31,9 +31,21 @@
     </div>
     {% endblock content %}
   </div>
+  <script type="text/javascript">
+    var CONTEXT = {
+      group_logo: "{% static 'images/group_logo.png' %}",
+      method_intro: "{% static 'images/method_intro.png' %}",
+      cauchy: "{% static 'images/Cauchy.png' %}",
+      drude: "{% static 'images/drude.png' %}",
+      lorenz: "{% static 'images/lorenz.png' %}",
+      sellmeier: "{% static 'images/sellmeier.png' %}",
+      brugreman: "{% static 'images/brugreman.png' %}",
+      lorentz: "{% static 'images/Lorentz.png' %}",
+      maxwell: "{% static 'images/maxwell.png' %}",
+    }
+  </script>
   {% render_bundle 'app' 'js' %}
   {% block javascript %}
   {% endblock javascript %}
 </body>
-
 </html>

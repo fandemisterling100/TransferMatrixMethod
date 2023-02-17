@@ -5,6 +5,8 @@ import json
 import io
 import xlsxwriter
 import ast
+import numpy as np
+
 
 def get_nk(d):
     """
@@ -327,7 +329,7 @@ def format_number(number):
         number = complex(round(number.real, 4), round(number.imag, 4))
     return number
 
-def create_file(response, data_source, data, graph_type=None):
+def create_file(response, data_source, data, answer, graph_type=None):
     writer = csv.writer(response)
     if data_source == 'table':
         headers = []
@@ -363,7 +365,7 @@ def create_file(response, data_source, data, graph_type=None):
     else:
         # Headers
         writer.writerow(
-            ['Wave Length', graph_type.capitalize(),]
+            ['Wave Length' if answer == 'espectral' else 'Angle', graph_type.capitalize(),]
         )
         x = data.get('x')
         y = data.get('y')
@@ -384,3 +386,34 @@ def create_file(response, data_source, data, graph_type=None):
 
 def get_current_vector(refractive_indexes, position):
     return [refractive_indexes[material][position] for material in range(len(refractive_indexes))]
+
+def get_reflectance_from_file(file_):
+    file_type = file_.content_type.split("/")[1]
+    decoded_file = file_.read().decode("utf-8").splitlines()
+    x_vector = []
+    y_vector = []
+
+    for line in decoded_file:
+        current_x, current_y = line.split(',')
+        try:
+            # Try to convert the numbers to float
+            current_x = float(current_x)
+            current_y = float(current_y)
+        except ValueError:
+            continue
+        else:
+            x_vector.append(current_x)
+            y_vector.append(current_y)
+
+    print(x_vector, y_vector)  
+    return x_vector, y_vector
+
+def chi_square(y_experimental, x_experimental, y_theorical, initial_param, final_param, steps):
+    x = np.linspace(initial_param, final_param, steps)
+    y_experimental = np.interp(x, x_experimental, y_experimental)
+    n = 0
+    accum = 0
+    while n < len(y_theorical):
+        accum += ((y_experimental[n] - y_theorical[n])**2)
+        n += 1
+    return accum, y_experimental

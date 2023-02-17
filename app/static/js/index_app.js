@@ -16,8 +16,13 @@ Vue.component('ValidationProvider', ValidationProvider)
 Vue.component('ValidationObserver', ValidationObserver)
 
 if (document.getElementById('app') != null) {
-    new Vue({
-        store,
-        render: h => h(App),
-    }).$mount('#app')
+  new Vue({
+    store,
+    data() {
+      return {
+        django_context: CONTEXT,
+      }
+    },
+    render: h => h(App),
+  }).$mount('#app')
 }

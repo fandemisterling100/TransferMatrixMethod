@@ -1,97 +1,111 @@
 <template>
   <div class="main-container container">
     <!-- Titles for the third screen where grpahics are being showed -->
-    <h2 class="w-100 text-left calculations-title">Calculations</h2>
+    <div class="w-100 calculations-title d-flex justify-content-between align-items-center">
+      <h2 class="m-0 p-0">Calculations</h2> 
+    </div>
     <!-- Vue component to render grpahic as a line chart 
     all the parameters inside are called from 'props' and
     'data' following the documentation provided by the
     dependency https://vue-chartjs.org/guide/#creating-your-first-chart-->
-    <div class="d-flex-justify-content-center align-items-center row w-100">
-      <LineChartGenerator
-        :chart-options="chartOptions"
-        :chart-data="chartData"
-        :chart-id="chartId"
-        :dataset-id-key="datasetIdKey"
-        :plugins="plugins"
-        :css-classes="cssClasses"
-        :styles="styles"
-        :width="width"
-        :height="height"
-        class="my-4 col-8"
-      />
-      <div class="d-flex flex-column align-items-center justify-content-center col-4">
-        <p v-if="type === 'angular'" class="m-0 p-0 mb-3">
-          <span class="font-weight-bold mr-3">Wave Length:</span>
-          {{ result.x_table }}
-        </p>
-        <b-table 
-          v-if="type === 'angular'"
-          caption-top
-          responsive
-          hover 
-          :items="items" 
-          :fields="fields"
-          head-variant="light"
-          sticky-header="500px"
-        ></b-table>
-        <div v-else class="spectral-table-container">
-          <table class="table table-fit" >
-            <thead class="thead-light">
-              <tr>
-                <th scope="col">
-                  Wave Length
-                </th>
-                <th scope="col" v-for="(material, index) in Object.keys(result.refractive_indexes_by_material)" :key="index">
-                  {{material.charAt(0).toUpperCase() + material.slice(1)}}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="index in Array.from({length: result.x_range.length}, (v, i) => i)" :key="index">
-                <td >
-                  {{result.x_range[index]}}
-                </td>
-                <td v-for="(material, indexM) in Object.keys(result.refractive_indexes_by_material)" :key="indexM">
-                  {{result.refractive_indexes_by_material[material].replaceAll('[', '').replaceAll(']', '').split(',')[index]}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div class="d-flex-justify-content-center align-items-start row w-100">
+      <div class="my-4 col-8">
+        <div class="espectral-table-title align-self-start">
+          Graphic
         </div>
-        <b-button class="mt-3" variant="info" @click="downloadTableData">Download Table</b-button>
-      </div>
-    </div>
-    <!-- Container for the dropdown and 'download button' -->
-    <div class="d-flex justify-content-center align-items-center mt-3">
-      <!-- Group of input option in the broswer, the groups contain a label for the input
-      and the input that can be for text, files, dropdown... In this case is a dropdown,
-      which is called a select in raw HTML and b-form-select on Bootstrap VUE -->
-      <b-form-group 
-        label="" 
-        label-for="graph-download"
-        label-align-sm="right"
-        class="d-flex align-items-center mr-3 mb-0"
-      >
-        <!-- The option selected by the user is going to be stored at the download
-        key on the data() below-->
-        <b-form-select class="ml-4" v-model="download" id="graph-download">
-          <!-- Render each option inside of downloadOptions in data(), the value for 
-          each option corresponds to the value key, and the text shown to the user 
-          corresponds to the text key. On the backend we will receive the value option, 
-          while the text option is just for visualization at front end -->
-          <b-form-select-option 
-            :value="option.value"
-            v-for="(option, index) in downloadOptions"
-            :key="index" 
+        <LineChartGenerator
+          :chart-options="chartOptions"
+          :chart-data="chartData"
+          :chart-id="chartId"
+          :dataset-id-key="datasetIdKey"
+          :plugins="plugins"
+          :css-classes="cssClasses"
+          :styles="styles"
+          :width="width"
+          :height="height"
+        />
+        <!-- Container for the dropdown and 'download button' -->
+        <div class="d-flex justify-content-center align-items-center mt-3">
+          <!-- Group of input option in the broswer, the groups contain a label for the input
+          and the input that can be for text, files, dropdown... In this case is a dropdown,
+          which is called a select in raw HTML and b-form-select on Bootstrap VUE -->
+          <b-form-group 
+            label="" 
+            label-for="graph-download"
+            label-align-sm="right"
+            class="d-flex align-items-center mr-3 mb-0"
           >
-            {{ option.text }}
-          </b-form-select-option>
-        </b-form-select>
-      </b-form-group>
-      <!-- Button to download the graphic data, once it is clicked the method downloadData
-      is called and executed from the methods() section below. Class and variant only
-      gives built-in bootstrap styles to the button -->
-      <b-button class="ml-3" variant="success" @click="downloadGraphData">Download</b-button>
+            <!-- The option selected by the user is going to be stored at the download
+            key on the data() below-->
+            <b-form-select class="ml-4" v-model="download" id="graph-download">
+              <!-- Render each option inside of downloadOptions in data(), the value for 
+              each option corresponds to the value key, and the text shown to the user 
+              corresponds to the text key. On the backend we will receive the value option, 
+              while the text option is just for visualization at front end -->
+              <b-form-select-option 
+                :value="option.value"
+                v-for="(option, index) in downloadOptions"
+                :key="index" 
+              >
+                {{ option.text }}
+              </b-form-select-option>
+            </b-form-select>
+          </b-form-group>
+          <!-- Button to download the graphic data, once it is clicked the method downloadData
+          is called and executed from the methods() section below. Class and variant only
+          gives built-in bootstrap styles to the button -->
+          <b-button class="ml-3" variant="success" @click="downloadGraphData">Download</b-button>
+        </div>
+      </div>
+      <div class="d-flex flex-column align-items-center justify-content-between col-4 mt-4 w-100">
+        <div class="d-flex justify-content-center align-items-center flex-column w-100 mb-2">
+          <div class="espectral-table-title align-self-start mb-4">
+            Refractive Indexes
+          </div>
+          <b-table 
+            v-if="type === 'angular'"
+            caption-top
+            responsive
+            hover 
+            :items="items" 
+            :fields="fields"
+            head-variant="light"
+            sticky-header="500px"
+          ></b-table>
+          <div v-else class="spectral-table-container">
+            <table class="table table-fit" >
+              <thead class="thead-light">
+                <tr>
+                  <th scope="col">
+                    Wave Length
+                  </th>
+                  <th scope="col" v-for="(material, index) in Object.keys(result.refractive_indexes_by_material)" :key="index">
+                    {{material.charAt(0).toUpperCase() + material.slice(1)}}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="index in Array.from({length: result.x_range.length}, (v, i) => i)" :key="index">
+                  <td >
+                    {{result.x_range[index]}}
+                  </td>
+                  <td v-for="(material, indexM) in Object.keys(result.refractive_indexes_by_material)" :key="indexM">
+                    {{result.refractive_indexes_by_material[material].replaceAll('[', '').replaceAll(']', '').split(',')[index]}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <b-button class="mt-0" variant="success" @click="downloadTableData">Download Table</b-button>
+        </div>
+        <div class="d-flex justify-content-center align-items-center flex-column w-100">
+          <div class="espectral-table-title align-self-start mb-4 mt-2">
+            Experimental Data
+          </div>
+          <p class="m-0 p-0 my-1 experimental-data-text">To upload experimental data and compare it with the reflectance data obtained, please click the button below.</p>
+          <b-button variant="info" class="mt-3" @click="goToExperimentalData">Upload experimental data</b-button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -99,7 +113,7 @@
 <script>
 // Import vuex to have access to the central storage of information. This storage can be visible
 // from the different .vue files in the project, so it allows us to share data between components
-import { mapState, mapActions } from "vuex"
+import { mapState, mapActions, mapMutations } from "vuex"
 // Import components from the dependency installed to create graphs
 import { Line as LineChartGenerator } from 'vue-chartjs/legacy'
 
@@ -235,11 +249,15 @@ export default {
     ...mapActions({
       downloadData: "transfer/downloadData",
     }),
+    ...mapMutations({
+      setCurrentPage: "transfer/setCurrentPage", // action to change the current page to the fourth one
+    }),
     downloadGraphData() {
       if (this.download) {
         let graphData = {
           x: this.result.x_range,
           y: this.result[this.download],
+          answer: this.type,
         }
         const data = {
           source: 'graph',
@@ -255,6 +273,7 @@ export default {
         data: {
           ...this.result.refractive_indexes_by_material,
           x: this.type === 'angular' ? this.result.x_table : this.result.x_range,
+          answer: this.type,
         },
       } 
       this.downloadData(data)
@@ -289,6 +308,9 @@ export default {
         fill: false
       }) */
       return data
+    },
+    goToExperimentalData() {
+      this.setCurrentPage('fourth')
     },
   },
   // If the values for the graph changes the graph will be updated in real time

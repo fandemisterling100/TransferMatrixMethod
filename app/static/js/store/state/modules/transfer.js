@@ -6,6 +6,9 @@ const state = ({
   type: null, // Answer selected by the user
   isLoadingResult: false, // Variable to know if the backend is currently calculating the graphs data
   result: null, // Variable to store the graphs data as a result of the POST
+  isLoadingComparisonResult: false,
+  comparisonResult: null,
+  initialParams: null,
 })
 
 // getters
@@ -57,6 +60,23 @@ const actions = {
       console.log(error);
     })
   },
+  calculateChi({ commit, state }, data) {
+    // Endpoint to ask for files
+    let url = `/api/v1/calculate-chi/`
+    commit('toggleLoadingComparisonResult', true)
+    data.append("steps", state.initialParams.steps)
+    data.append("initial_param", state.initialParams.initial_param)
+    data.append("final_param", state.initialParams.final_param)
+
+    return Api.post(url, data).then((response) => {
+      commit('setComparisonResult', response.data)
+      commit('toggleLoadingComparisonResult', false)
+      return response.data
+    }).catch(error => {
+      commit('toggleLoadingComparisonResult', false)
+      console.log(error);
+    })
+  },
 }
 
 // mutations
@@ -78,6 +98,18 @@ const mutations = {
   toggleLoadingResult(state, value) {
     state.isLoadingResult = value
   },
+  // Mutation to know when we are waiting for a response
+  // from the server to calculate chi quad and read the
+  // experimental data uploaded by the user
+  toggleLoadingComparisonResult(state, value) {
+    state.isLoadingComparisonResult = value
+  },
+  setComparisonResult (state, value) {
+    state.comparisonResult = value
+  },
+  setInitialParams(state, value) {
+    state.initialParams = value
+  }
 }
 
 export default {

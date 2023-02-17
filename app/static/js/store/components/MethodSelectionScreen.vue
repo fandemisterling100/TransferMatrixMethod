@@ -2,7 +2,7 @@
   <!-- General container for all data -->
   <div class="methods-main-container w-100">
     <!-- Initial parameters title on the second screen -->
-    <h2 class="w-100 text-left">Initial Parameters</h2>
+    <h2 class="text-left">Materials and Initial Parameters</h2>
     <!-- Container for the left middle of the screen where the initial parameters are located -->
     <div class="d-flex justify-content-center align-items-center middle-container">
       <div class="initial-params-container">
@@ -21,7 +21,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'angular'"
           >
-            <b-form-input id="initial-angle" v-model="initialAngle" type="number" step="0.1"></b-form-input>
+            <b-form-input id="initial-angle" v-model="initialAngle" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the final angle, type float with steps of 0.1 in the spinner. It is shown just
@@ -33,7 +33,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'angular'"
           >
-            <b-form-input id="final-angle" v-model="finalAngle" type="number" step="0.1"></b-form-input>
+            <b-form-input id="final-angle" v-model="finalAngle" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the angle, type float with steps of 0.1 in the spinner. It is shown just
@@ -45,7 +45,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'espectral'"
           >
-            <b-form-input id="angle" v-model="angle" type="number" step="0.1"></b-form-input>
+            <b-form-input id="angle" v-model="angle" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the steps, type integer. It is shown for both types of answer. 
@@ -56,7 +56,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="teps" v-model="steps" type="number"></b-form-input>
+            <b-form-input id="teps" v-model="steps" type="number" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the Initial Wave Length, type float with steps of 0.1 in the spinner. It is shown just
@@ -68,7 +68,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'espectral'"
           >
-            <b-form-input id="initialWaveLength" v-model="initialWaveLength" type="number" step="0.1"></b-form-input>
+            <b-form-input id="initialWaveLength" v-model="initialWaveLength" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the Final Wave Length, type float with steps of 0.1 in the spinner. It is shown just
@@ -80,7 +80,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'espectral'"
           >
-            <b-form-input id="finalWaveLength" v-model="finalWaveLength" type="number" step="0.1"></b-form-input>
+            <b-form-input id="finalWaveLength" v-model="finalWaveLength" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the Wave Length, type float with steps of 0.1 in the spinner. It is shown just
@@ -92,7 +92,7 @@
             class="d-flex align-items-center mr-3"
             v-if="type === 'angular'"
           >
-            <b-form-input id="waveLength" v-model="waveLength" type="number" step="0.1"></b-form-input>
+            <b-form-input id="waveLength" v-model="waveLength" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <!-- From group for the Wave Length, type radio button (in this case the value will be a string: p or s). 
@@ -114,7 +114,7 @@
           </b-form-group>
         </div>
         <!-- Container for substrate and host options -->
-        <div class="d-flex justify-content-center align-items-center flex-column method-options">
+        <div class="d-flex justify-content-center align-items-center method-options">
           <!-- From group for substrate. It contains the label and the dropdown with the method options.
           This case is repeated for all materials. The method options comes from methodOptions and
           each option is dinamically created as an html object using de v-for directive. -->
@@ -197,7 +197,7 @@
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3 mb-0"
                 >
-                  <b-form-input :id="`thickness-${index+1}`" v-model="layer.thickness" type="number" step="0.1"></b-form-input>
+                  <b-form-input :id="`thickness-${index+1}`" v-model="layer.thickness" type="number" step="0.1" min="0"></b-form-input>
                 </b-form-group>
               </div>
               <span class="text-danger font-weight-bold error-message" v-show="(!layer.thickness || layer.thickness <= 0) && sentButtonPressed">
@@ -258,7 +258,7 @@
       <div class="method-container" v-show="dielectricModel === 'lorenz'">
         <p class="w-100 font-weight-bold text-left my-2">Lorenz Model: For Dielectrics</p>
         <!-- Formula picture -->
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="lorenz_img" alt="lorenz-model" class="lorenz">
         <div>
           <!-- Each of the following form groups contains the label according to the parameter
           required by the method and the input field for numbers of type float with a step of 0.1 
@@ -270,7 +270,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="ne" v-model="lorenz.ne" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="ne" v-model="lorenz.ne" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -279,7 +279,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="wo" v-model="lorenz.wo" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="wo" v-model="lorenz.wo" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -288,7 +288,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="w" v-model="lorenz.w" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="w" v-model="lorenz.w" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -297,7 +297,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="r" v-model="lorenz.r" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="r" v-model="lorenz.r" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
         </div>
       </div>
@@ -306,7 +306,7 @@
       <!-- Container for data when the user selects Drude model -->
       <div class="method-container" v-show="dielectricModel === 'drude'">
         <p class="w-100 font-weight-bold text-left my-2">Drude Model: For Metals</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="drude_img" alt="lorenz-model" class="drude">
         <div>
           <!-- Each of the following form groups contains the label according to the parameter
           required by the method and the input field for numbers of type float with a step of 0.1 
@@ -318,7 +318,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="drude-ne" v-model="drude.ne" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="drude-ne" v-model="drude.ne" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -327,7 +327,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="drude-e" v-model="drude.e" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="drude-e" v-model="drude.e" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -336,7 +336,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="drude-w" v-model="drude.w" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="drude-w" v-model="drude.w" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -345,7 +345,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="drude-r" v-model="drude.r" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="drude-r" v-model="drude.r" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
         </div>
       </div>
@@ -354,7 +354,7 @@
       <!-- Container for Sellmeier fields -->
       <div class="method-container" v-show="dielectricModel === 'sellmeier'">
         <p class="w-100 font-weight-bold text-left my-2">Sellmeier Model: For Transparents</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="sellmeier_img" alt="lorenz-model" class="sellmeier">
         <div>
           <!-- Each of the following form groups contains the label according to the parameter
           required by the method and the input field for numbers of type float with a step of 0.1 
@@ -366,7 +366,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="sellmeier-a" v-model="sellmeier.a" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="sellmeier-a" v-model="sellmeier.a" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -375,7 +375,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="sellmeier-b" v-model="sellmeier.b" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="sellmeier-b" v-model="sellmeier.b" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -395,7 +395,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="sellmeier-lambdao" v-model="sellmeier.lambdaO" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="sellmeier-lambdao" v-model="sellmeier.lambdaO" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
         </div>
       </div>
@@ -404,7 +404,7 @@
        <!-- Container for couchy fields -->
        <div class="method-container" v-show="dielectricModel === 'cauchy'">
         <p class="w-100 font-weight-bold text-left my-2">Cauchy Model: For Transparent Materials</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="cauchy_img" alt="lorenz-model">
         <div>
           <!-- Each of the following form groups contains the label according to the parameter
           required by the method and the input field for numbers of type float with a step of 0.1 
@@ -416,7 +416,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="cauchy-a" v-model="cauchy.a" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="cauchy-a" v-model="cauchy.a" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -425,7 +425,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="cauchy-b" v-model="cauchy.b" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="cauchy-b" v-model="cauchy.b" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -434,7 +434,7 @@
             label-align-sm="right"
             class="d-flex align-items-center mr-3"
           >
-            <b-form-input id="cauchy-c" v-model="cauchy.c" class="ml-3" type="number" step="0.1"></b-form-input>
+            <b-form-input id="cauchy-c" v-model="cauchy.c" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
           </b-form-group>
 
           <b-form-group
@@ -470,7 +470,7 @@
         label-align-sm="right"
         class="d-flex align-items-center mr-3"
       >
-        <b-form-input id="manual-n" v-model="manual.n" class="ml-3" type="number" step="0.1"></b-form-input>
+        <b-form-input id="manual-n" v-model="manual.n" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
       </b-form-group>
 
       <b-form-group
@@ -479,7 +479,7 @@
         label-align-sm="right"
         class="d-flex align-items-center mr-3"
       >
-        <b-form-input id="manual-k" v-model="manual.k" class="ml-3" type="number" step="0.1"></b-form-input>
+        <b-form-input id="manual-k" v-model="manual.k" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
       </b-form-group>
       <template #modal-footer="{ ok, cancel }">
         <b-button size="sm" variant="success"  @click="setManualMethod(ok, 'modal-manually')">
@@ -509,7 +509,7 @@
       <!-- Container shown if the theory selected is Maxwell -->
       <div class="method-container" v-show="effectiveMediumModel === 'maxwell'">
         <p class="w-100 font-weight-bold text-left my-2">Maxwell Garnett Formula</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="maxwell_img" alt="lorenz-model">
         <div class="w-100">
           <div class="w-100">
             <!-- Form groups to show the label and input field for this theory -->
@@ -556,7 +556,7 @@
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3"
                 >
-                  <b-form-input id="manual-e1m" v-model="maxwell.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-e1m" v-model="maxwell.e1m" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                 </b-form-group>
                 <b-form-group
                   label="ε2"
@@ -564,7 +564,7 @@
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3 ml-3"
                 >
-                  <b-form-input id="manual-e2m" v-model="maxwell.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-e2m" v-model="maxwell.e2m" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                 </b-form-group>
               </div>
               <div v-if="maxwell.emManual === 'nk'" class="d-flex align-items-center">
@@ -574,7 +574,7 @@
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3"
                 >
-                  <b-form-input id="manual-nm" v-model="maxwell.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-nm" v-model="maxwell.nm" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                 </b-form-group>
                 <b-form-group
                   label="k"
@@ -582,7 +582,7 @@
                   label-align-sm="right"
                   class="d-flex align-items-center mr-3 ml-3"
                 >
-                  <b-form-input id="manual-km" v-model="maxwell.km" class="ml-3" type="number" step="0.1"></b-form-input>
+                  <b-form-input id="manual-km" v-model="maxwell.km" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                 </b-form-group>
               </div>
             </div>
@@ -651,7 +651,7 @@
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3"
                       >
-                        <b-form-input :id="`manual-e1m-${index+1}`" v-model="inclusion.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                        <b-form-input :id="`manual-e1m-${index+1}`" v-model="inclusion.e1m" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                       </b-form-group>
                       <b-form-group
                         label="ε2"
@@ -659,7 +659,7 @@
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3 ml-3"
                       >
-                        <b-form-input :id="`manual-e2m-${index+1}`" v-model="inclusion.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
+                        <b-form-input :id="`manual-e2m-${index+1}`" v-model="inclusion.e2m" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                       </b-form-group>
                     </div>
                     <div v-if="inclusion.manual === 'nk'" class="d-flex align-items-center">
@@ -669,7 +669,7 @@
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3"
                       >
-                        <b-form-input :id="`manual-nm-${index+1}`" v-model="inclusion.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                        <b-form-input :id="`manual-nm-${index+1}`" v-model="inclusion.nm" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                       </b-form-group>
                       <b-form-group
                         label="k"
@@ -677,7 +677,7 @@
                         label-align-sm="right"
                         class="d-flex align-items-center mr-3 ml-3"
                       >
-                        <b-form-input :id="`manual-km-${index+1}`" v-model="inclusion.km" class="ml-3" type="number" step="0.1"></b-form-input>
+                        <b-form-input :id="`manual-km-${index+1}`" v-model="inclusion.km" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                       </b-form-group>
                     </div>
                   </div>
@@ -702,7 +702,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 mb-0"
                   >
-                    <b-form-input class="ml-4" :id="`maxwell-f-${index+1}`" v-model="inclusion.volume" type="number" step="0.1"></b-form-input>
+                    <b-form-input class="ml-4" :id="`maxwell-f-${index+1}`" v-model="inclusion.volume" type="number" step="0.1" min="0" max="1"></b-form-input>
                   </b-form-group>
                   <span class="text-danger font-weight-bold error-message mt-2" v-show="(!inclusion.volume || inclusion.volume <= 0) && okButtonPressed">
                     Fraction volume is a mandatory field
@@ -717,8 +717,8 @@
       <!-- Lorentz -->
       <!-- Container to show fields for Lorentz theory -->
       <div class="method-container" v-show="effectiveMediumModel === 'lorentz'">
-        <p class="w-100 font-weight-bold text-left my-2">The Lorents-Lorenz Relation</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <p class="w-100 font-weight-bold text-left my-2">The Lorentz-Lorenz Relation</p>
+        <img :src="lorentz_img" alt="lorenz-model" class="lorentz">
         <div class="d-flex justify-content-between align-items-end w-100">
           <div>
             <div class="w-100">
@@ -769,7 +769,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input id="lorentz-manual-e1m" v-model="lorentz.e1m" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-manual-e1m" v-model="lorentz.e1m" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="ε2m"
@@ -777,7 +777,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input id="lorentz-manual-e2m" v-model="lorentz.e2m" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-manual-e2m" v-model="lorentz.e2m" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
                 <div v-if="lorentz.emManual === 'nk'" class="d-flex align-items-center">
@@ -787,7 +787,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input id="lorentz-nm" v-model="lorentz.nm" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-nm" v-model="lorentz.nm" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="km"
@@ -795,7 +795,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input id="lorentz-km" v-model="lorentz.km" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-km" v-model="lorentz.km" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
               </div>
@@ -850,7 +850,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input id="lorentz-manual-e1i" v-model="lorentz.e1i" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-manual-e1i" v-model="lorentz.e1i" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="ε2i"
@@ -858,7 +858,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input id="lorentz-manual-e2i" v-model="lorentz.e2i" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-manual-e2i" v-model="lorentz.e2i" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
                 <div v-if="lorentz.eiManual === 'nk'" class="d-flex align-items-center">
@@ -868,7 +868,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input id="lorentz-ni" v-model="lorentz.ni" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-ni" v-model="lorentz.ni" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="ki"
@@ -876,7 +876,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input id="lorentz-ki" v-model="lorentz.ki" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input id="lorentz-ki" v-model="lorentz.ki" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
               </div>
@@ -896,7 +896,7 @@
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3"
               >
-              <b-form-input id="lorentz-f" v-model="lorentz.volume" class="ml-3" type="number" step="0.1"></b-form-input>
+              <b-form-input id="lorentz-f" v-model="lorentz.volume" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
               </b-form-group>
             <span class="text-danger font-weight-bold error-message" v-show="(!lorentz.volume || lorentz.volume <= 0) && okButtonPressed">
               Fraction volume is a mandatory field
@@ -909,7 +909,7 @@
       <!-- Container for bruggeman theory fields -->
       <div class="method-container" v-show="effectiveMediumModel === 'bruggeman'">
         <p class="w-100 font-weight-bold text-left my-2">Bruggeman Relation</p>
-        <img src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="lorenz-model">
+        <img :src="brugreman_img" alt="lorenz-model">
         
         <!-- Components section -->
         <div class="w-100">
@@ -968,7 +968,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input :id="`component-e1i-${index+1}`" v-model="component.e1i" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input :id="`component-e1i-${index+1}`" v-model="component.e1i" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="ε2"
@@ -976,7 +976,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input :id="`component-e2i-${index+1}`" v-model="component.e2i" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input :id="`component-e2i-${index+1}`" v-model="component.e2i" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
                 <div v-if="component.manual === 'nk'" class="d-flex align-items-center">
@@ -986,7 +986,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
                   >
-                    <b-form-input :id="`component-ni-${index+1}`" v-model="component.ni" class="ml-3 mr-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input :id="`component-ni-${index+1}`" v-model="component.ni" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
                     label="k"
@@ -994,7 +994,7 @@
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
                   >
-                    <b-form-input :id="`component-ki-${index+1}`" v-model="component.ki" class="ml-3" type="number" step="0.1"></b-form-input>
+                    <b-form-input :id="`component-ki-${index+1}`" v-model="component.ki" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                 </div>
               </div>
@@ -1020,7 +1020,7 @@
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3 mb-0"
               >
-                <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1"></b-form-input>
+                <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1" min="0"></b-form-input>
               </b-form-group>
               <span class="text-danger font-weight-bold error-message mt-2" v-show="(!component.volume || component.volume <= 0) && okButtonPressed">
                 Fraction volume is a mandatory field
@@ -1047,12 +1047,19 @@
   
   
 <script>
-import { mapState, mapActions } from "vuex"
+import { mapState, mapActions, mapMutations } from "vuex"
 export default {
   // Initialization of all the parameters and values inside of the forms,
   // we also include here the options on each dropdown shown.
   data() {
     return {
+      cauchy_img: this.$root.$data.django_context.cauchy,
+      drude_img: this.$root.$data.django_context.drude,
+      lorenz_img: this.$root.$data.django_context.lorenz,
+      sellmeier_img: this.$root.$data.django_context.sellmeier,
+      maxwell_img: this.$root.$data.django_context.maxwell,
+      brugreman_img: this.$root.$data.django_context.brugreman,
+      lorentz_img: this.$root.$data.django_context.lorentz,
       sentButtonPressed: false,
       okButtonPressed: false,
       initialAngle: 0,
@@ -1210,6 +1217,9 @@ export default {
       // Method to send data to backend through the enpoint created
       sendData: "transfer/sendData",
     }),
+    ...mapMutations({
+      setInitialParams: "transfer/setInitialParams",
+    }),
     // Function to open the modal and set the current entity. It means
     // that we will know which modal is opened and from what material was opened
     // (host, substrate, layer) in order to save the data under the corresponding
@@ -1293,6 +1303,13 @@ export default {
       // formData and it is a FormData type so we can send also files
       // using this format.
       const formData = new FormData()
+
+      this.setInitialParams({
+        initial_param: this.type === 'angular' ? this.initialAngle : this.initialWaveLength,
+        final_param: this.type === 'angular' ? this.finalAngle : this.finalWaveLength,
+        steps: this.steps,
+      })
+
       formData.append("initialAngle", this.initialAngle)
       formData.append("finalAngle", this.finalAngle)
       formData.append("angle", this.angle)
