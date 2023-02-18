@@ -514,7 +514,7 @@
           <div class="w-100">
             <!-- Form groups to show the label and input field for this theory -->
             <b-form-group
-              label="ε"
+              label="εm"
               label-for="maxwell-em"
               label-align-sm="right"
               class="d-flex align-items-center mr-3"
@@ -764,7 +764,7 @@
 
                 <div v-if="lorentz.emManual === 'e'" class="d-flex align-items-center">
                   <b-form-group
-                    label="ε1m"
+                    label="ε1"
                     label-for="lorentz-manual-e1m"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -772,7 +772,7 @@
                     <b-form-input id="lorentz-manual-e1m" v-model="lorentz.e1m" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="ε2m"
+                    label="ε2"
                     label-for="lorentz-manual-e2m"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -782,7 +782,7 @@
                 </div>
                 <div v-if="lorentz.emManual === 'nk'" class="d-flex align-items-center">
                   <b-form-group
-                    label="nm"
+                    label="n"
                     label-for="lorentz-nm"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -790,7 +790,7 @@
                     <b-form-input id="lorentz-nm" v-model="lorentz.nm" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="km"
+                    label="k"
                     label-for="lorentz-km"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -845,7 +845,7 @@
 
                 <div v-if="lorentz.eiManual === 'e'" class="d-flex align-items-center">
                   <b-form-group
-                    label="ε1i"
+                    label="ε1"
                     label-for="lorentz-manual-e1i"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -853,7 +853,7 @@
                     <b-form-input id="lorentz-manual-e1i" v-model="lorentz.e1i" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="ε2i"
+                    label="ε2"
                     label-for="lorentz-manual-e2i"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -863,7 +863,7 @@
                 </div>
                 <div v-if="lorentz.eiManual === 'nk'" class="d-flex align-items-center">
                   <b-form-group
-                    label="ni"
+                    label="n"
                     label-for="lorentz-ni"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3"
@@ -871,7 +871,7 @@
                     <b-form-input id="lorentz-ni" v-model="lorentz.ni" class="ml-3 mr-3" type="number" step="0.1" min="0"></b-form-input>
                   </b-form-group>
                   <b-form-group
-                    label="ki"
+                    label="k"
                     label-for="lorentz-ki"
                     label-align-sm="right"
                     class="d-flex align-items-center mr-3 ml-3"
@@ -896,7 +896,7 @@
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3"
               >
-              <b-form-input id="lorentz-f" v-model="lorentz.volume" class="ml-3" type="number" step="0.1" min="0"></b-form-input>
+              <b-form-input id="lorentz-f" v-model="lorentz.volume" class="ml-3" type="number" step="0.1" min="0" max="1"></b-form-input>
               </b-form-group>
             <span class="text-danger font-weight-bold error-message" v-show="(!lorentz.volume || lorentz.volume <= 0) && okButtonPressed">
               Fraction volume is a mandatory field
@@ -1020,7 +1020,7 @@
                 label-align-sm="right"
                 class="d-flex align-items-center mr-3 mb-0"
               >
-                <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1" min="0"></b-form-input>
+                <b-form-input class="ml-4" :id="`component-f-${index+1}`" v-model="component.volume" type="number" step="0.1" min="0" max="1"></b-form-input>
               </b-form-group>
               <span class="text-danger font-weight-bold error-message mt-2" v-show="(!component.volume || component.volume <= 0) && okButtonPressed">
                 Fraction volume is a mandatory field
@@ -1320,7 +1320,6 @@ export default {
       formData.append("polarization", this.polarization)
       formData.append("substrate", this.substrate)
       formData.append("host", this.host)
-      formData.append("materialsQuantity", 2 + this.layers.length)
       
       // Iterate over all the materials to get the corresponding data
       Object.keys(this.materials).forEach(key => {

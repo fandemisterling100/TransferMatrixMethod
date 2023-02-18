@@ -29,7 +29,7 @@
             <div class="espectral-table-title align-self-start mb-2">
               Upload Data
             </div>
-            <img class="m-0 w-100 my-3" src="https://www.researchgate.net/profile/Satyendra-Mourya/post/How_to_decide_realistic_parameters_in_Drude-Lorentz_model_for_fitting_ellipsometry_data/attachment/59d624ac6cda7b8083a20381/AS%3A400330371158017%401472457606803/image/Drude-Lorentz+equation.tif" alt="chiquad">
+            <img class="m-0 w-100 my-3 chi" :src="chi_img" alt="chiquad">
             <div class="w-100 my-2">
               <b-alert show variant="warning"><span class="font-weight-bold">χ²: </span> {{ comparisonResult ? comparisonResult.chi : '0.0' }}</b-alert>
             </div>
@@ -112,6 +112,7 @@ export default {
   },
   data() {
     return {
+      chi_img: this.$root.$data.django_context.chi,
       file: null,
       chartData: {
         labels: [

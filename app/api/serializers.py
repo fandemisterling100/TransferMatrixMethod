@@ -23,7 +23,4 @@ class TransferSerializer(serializers.Serializer):
     finalWaveLength = serializers.FloatField(required=False)
     waveLength = serializers.FloatField(required=False)
     polarization = serializers.CharField(required=False)
-    substrate = serializers.CharField(required=False)
-    host = serializers.CharField(required=False)
-    materialsQuantity = serializers.IntegerField(required=False)
     answer = serializers.CharField(required=False)
