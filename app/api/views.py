@@ -1,3 +1,20 @@
+"""
+This is the main file in our backend. Views are in charge to respond 
+the HTTP requests received. Each HTTP request arrives to an specific endpoint, each
+endpoint is related to a specific view and the view has the logic to resolve the request.
+The views have properties such as permissions, to know which kind of users can retrieve or 
+send information to the server, parser classes to know which kind of data
+can receive, as JSON data or also files and a serializer class to know
+how to format or how to map data recived on post requests.
+
+Since we are creating an API inside of our backend we are importing
+django rest framwork classes and functions for it. DRF is a Django framework
+to create REST APIs so it offers built-in views and ways to respond to the server.
+Here we overwrite some of this methods related to DRF built-in views so we can 
+addour logic and respond to the browser according to our needs. 
+"""
+
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny

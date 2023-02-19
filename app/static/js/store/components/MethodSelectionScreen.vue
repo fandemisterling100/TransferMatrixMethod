@@ -1,3 +1,8 @@
+<!-- This is our main frontend file since it cointains all the elements
+shown in the second screen, it is, the materials and initial parameters screen.
+Here we have all the form inputs and modals shown to get data from user on each material
+for each method (manual, file, dielectric function or effective medium theory) -->
+
 <template>
   <!-- General container for all data -->
   <div class="methods-main-container w-100">
@@ -1193,10 +1198,10 @@ export default {
       let methods = [
         { value: null, text: 'Select a method...' },
         { value: 'upload', text: 'Upload file' },
-        { value: 'dielectric', text: 'Dielectric Function Models' },
         { value: 'efective', text: 'Efective Medium Theories' },
       ]
       if (this.type === 'angular') {
+        methods.push({ value: 'dielectric', text: 'Dielectric Function Models' })
         methods.push({ value: 'manually', text: 'Manually' })
       }
       return methods

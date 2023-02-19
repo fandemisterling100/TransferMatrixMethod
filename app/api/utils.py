@@ -1,5 +1,15 @@
 from mpmath import sqrt
 import csv
+"""
+This file contains functions that will be used multiple times
+across out project. They are written here since we can import them
+from different files to use them. This functions are usually called from
+views.py where all the logic of the app is executed. This functions
+also help pur views to be shorter and less complex to read since we separate
+some of the code and logic in different functions.
+"""
+
+
 from app.api.interpolacion import interpolation
 import json
 import io

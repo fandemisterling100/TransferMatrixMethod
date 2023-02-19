@@ -1,3 +1,7 @@
+""" This file inherits from base.py and stores all the additional 
+settings the developer needs while is working on this project """
+
+
 from .base import *  # noqa
 from .base import env
 

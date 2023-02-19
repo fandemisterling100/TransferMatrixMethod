@@ -1,5 +1,9 @@
 """
-Base settings to build other settings files upon.
+Base settings to build other settings files upon. Here we have 
+variables to set timezone, language, setup local and external applications, ways
+to authenticate users, name of the application, logo of the application, etc.
+Most of these settings come from the cookiecutter format. These settings are inherited
+by the local.py and production,py files.
 """
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _

@@ -1,3 +1,6 @@
+""" This file inherits from base.py settings and it is just active
+when the application is running on the hosting service. """
+
 import logging
 
 import sentry_sdk

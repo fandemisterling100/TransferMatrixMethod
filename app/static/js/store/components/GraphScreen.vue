@@ -1,3 +1,5 @@
+<!-- This file represents the graph screen, where reflectance, 
+transmittance, and abrosbance are shown. It is the third page -->
 <template>
   <div class="main-container container">
     <!-- Titles for the third screen where grpahics are being showed -->

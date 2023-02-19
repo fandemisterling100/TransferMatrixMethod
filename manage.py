@@ -1,4 +1,17 @@
 #!/usr/bin/env python
+
+"""
+This file allows the execution of all the commands related to Django.
+Every command starts with:
+python manage.py ...
+
+Some of them are:
+python manage.py runserver - To run locally the backend
+python manage.py createsuperuser - To create a super user that can access to the Django admin screens
+python manage.py makemigrations - To create the files with all the changes to be executed on the DB according
+to the changes on the models.py files.
+python manage.py migrate - To apply on DB all the changes captured on the migrations files
+"""
 import os
 import sys
 from pathlib import Path

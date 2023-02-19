@@ -1,3 +1,6 @@
+<!-- This file is in charge to show a loading pop up to tell the
+  user that the server is busy processing its request. This component is 
+ shared across all the vue components. -->
 <template>
   <b-modal 
     id="loading-popup"

@@ -1,3 +1,8 @@
+<!-- This is the first screen seen by the user once the application is loaded.
+Here the user selects the answer type (angular, spectral) before continue
+to the materials and initial parameters screen. We call the action setCurrentPage
+to change the value of the current page on the sate of vuex once the user
+click the go button and the bottom of the screen. -->
 <template>
   <div class="main-container container">
     <div class="d-flex justify-content-start align-items-center w-100">

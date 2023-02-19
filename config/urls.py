@@ -1,3 +1,9 @@
+""" This is the main urls file. Here all the urls.py files from
+the Django applications are imported. This file also contains
+the prefix for the urls on every application. The include function
+is the one in charge of importing apps urls. """
+
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

@@ -9,6 +9,18 @@
     </div>
   </template>
   <script>
+
+  /* 
+  This file is divided into two main sections. The template section contains all the
+  html tags that will be rendered on the user browser. The script section contains all
+  the javascript code that will make the html content dynamic. 
+
+  App.vue is the main file where all the screens will be rendered, each screen will be shown 
+  depending on the value of the currentPage variable on the state (Vuex). All the components
+  are imported here but just one is shown at the time depending on the result of the conditional
+  linked to it.
+   */
+
   import WelcomeScreen from './store/components/WelcomeScreen.vue';
   import MethodSelectionScreen from './store/components/MethodSelectionScreen.vue';
   import GraphScreen from './store/components/GraphScreen.vue';

@@ -1,3 +1,12 @@
+/* 
+This file customized the axios functionalities so we can send data
+to the server accoirding to our needs. For this, we have overwritten  
+each of the verbs that can be executed (get, post, put, delete) on an api.
+Depending on the request we will send a json with the data or a form data in 
+case the request includes a file or a set of files.
+*/
+
+
 import axios from 'axios';
 
 class Api {

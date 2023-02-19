@@ -1,3 +1,19 @@
+/* This file allows to centralize information on vuex. Here
+we save data as the currentPage, to know where the user is located at any
+moment on the application. The type or answer selected by the user
+at the first screen, the result from the calculations on the second screen
+(refractive indices, transmittance, reflectance and absorbance), the chi squared
+calculated on third on the experimental data screen, the initial paramerers selected
+and some loading variables to know when the server is busy calculating a response
+for us.
+
+The state is the actual data, actions are the functions in charge to 
+execute the requests to the server and to call the mutations to 
+update data on the sate.
+
+*/
+
+
 import Api from '../../utils/api'
 
 // initial state
