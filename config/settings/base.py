@@ -85,9 +85,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "app.users.apps.UsersConfig",
     # Your stuff: custom apps go here
-    "app.core",
     "app.api.apps.ApiConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -118,7 +116,6 @@ REST_FRAMEWORK = {
 }
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 LOGIN_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
@@ -206,7 +203,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "app.utils.context_processors.settings_context",
             ],
         },
     }
@@ -310,9 +306,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 ACCOUNT_USERNAME_REQUIRED = False
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "app.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "app.users.adapters.SocialAccountAdapter"
 
 
 # Your stuff...
